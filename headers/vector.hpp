@@ -26,12 +26,14 @@ namespace ft {
         size_t          _cap;
         allocator_type  _all;
 
-        /* construct/copy/destroy: */
-        // Constructs an empty container with the given allocator alloc.
+        // construct/copy/destroy:
+        /* Constructs an empty container with the given 
+        allocator alloc.*/
         explicit vector(const Allocator& = Allocator()):
             _arr(0), _sz(0), _cap(0), _all(alloc){}
         
-        // Constructs the container with count copies of elements with value value.
+        /* Constructs the container with count copies of 
+        elements with value value.*/
         explicit vector(size_type n, const T& value = T(),
             const Allocator& = Allocator()):
             _sz(n), _cap(n), _all(alloc){
@@ -41,15 +43,34 @@ namespace ft {
             }
 
         // Constructs the container with the contents of the range [first, last]    
-        template <class InputIterator>
+        template <class InputIterator> //как сделать проверку на int?
             vector(InputIterator first, InputIterator last,
-                const Allocator& = Allocator()):
+                const Allocator& = Allocator()): _all(alloc){
+                    bool is_valid;
+                    if (first > last)
+                        throw std::length_error("vector");
+                    _sz = last - first;
+                    _cap = _sz;
+                    _arr = _all.allocate(_cap);
+                    
+                
+            }
+
 
         //Copy constructor. Constructs the container with the copy of the contents of other.         
         vector(const vector<T,Allocator>& x){ // надо ли здесь указывать sz, cap? перегрузка опертора должна случиться раньше
             *this = x;
         }
-        ~vector();
+
+        ~vector()
+        {
+            for (size_t i = 0; i < _sz; i++)
+                _all.destroy(_arr + i);
+            if (_cap)
+                _all.deallocate(_arr, _cap);
+        }
+        //
+        
         vector<T,Allocator>& operator=(const vector<T,Allocator>& x);
         template <class InputIterator>
             void assign(InputIterator first, InputIterator last);
