@@ -40,7 +40,7 @@ namespace ft {
                 _arr = _all.allocate(n);
                 for (size_type i = 0; i < n; i ++)
                     _all.construct(_arr + i, value);
-            }
+        }
 
         // Constructs the container with the contents of the range [first, last]    
         // template <class InputIterator> //как сделать проверку на int?
@@ -61,7 +61,7 @@ namespace ft {
             for (size_t i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
             if (_cap)
-                _all.deallocate(_arr);
+                _all.deallocate(_arr, _cap);
             _arr = _all.allocate(x._cap)
             _sz = x._sz;
             _cap = x._cap;
@@ -69,7 +69,7 @@ namespace ft {
                 _all.construct(_arr + i, *(x + i))
             return *this;     
         }
-        
+
         //Copy constructor. Constructs the container with the copy of the contents of other.         
         vector(const vector<T,Allocator>& x){ // надо ли здесь указывать sz, cap? перегрузка опертора должна случиться раньше
             *this = x;
@@ -79,15 +79,26 @@ namespace ft {
         {
             for (size_t i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
-            if (_cap)
-                _all.deallocate(_arr, _cap);
+            _all.deallocate(_arr, _cap); 
         }
-        //
-        
         
         template <class InputIterator>
             void assign(InputIterator first, InputIterator last);
-        void assign(size_type n, const T& u);
+        
+        void assign(size_type n, const T& u){
+            for (size_t i = 0; i < _sz; i++)
+                _all.destroy(_arr + i);
+            if (n > _cap){
+                _all.deallocate(_arr, _cap);
+                while (_cap < n)
+                    _cap *= 2;
+                _arr = _all.allocate(_cap);  
+            }
+            for (size_t i = 0; i < n; i++)
+                _all.construct(_arr + i, u);
+            _sz = n;            
+        }
+
         allocator_type get_allocator() const;
 
         // iterators:
@@ -118,7 +129,7 @@ namespace ft {
                 for (i = 0; i < _sz; i++)
                     _all.destroy(_arr + i);
                 if (_cap)
-                    _all.deallocate(_arr);
+                    _all.deallocate(_arr, _cap);
                 _arr = arr;
                 _cap = n;
             }
@@ -151,7 +162,6 @@ namespace ft {
             return false;
         }
 
-        
         // element access:
         reference operator[](size_type n);
         const_reference operator[](size_type n) const;
@@ -172,7 +182,12 @@ namespace ft {
         iterator erase(iterator position);
         iterator erase(iterator first, iterator last);
         void swap(vector<T,Allocator>&);
-        void clear();
+        void clear()
+        {
+            for (size_t i = 0; i < _sz; i++)
+                _all.destroy(_arr + i);
+            _sz = 0;
+        }
         };
 template <class T, class Allocator>
 bool operator==(const vector<T,Allocator>& x,
