@@ -55,7 +55,21 @@ namespace ft {
 
         //     }
 
-
+        vector<T,Allocator>& operator=(const vector<T,Allocator>& x){
+            if (this == &x)
+                return *this;
+            for (size_t i = 0; i < _sz; i++)
+                _all.destroy(_arr + i);
+            if (_cap)
+                _all.deallocate(_arr);
+            _arr = _all.allocate(x._cap)
+            _sz = x._sz;
+            _cap = x._cap;
+            for (size_t i = 0; i < _sz; i++)
+                _all.construct(_arr + i, *(x + i))
+            return *this;     
+        }
+        
         //Copy constructor. Constructs the container with the copy of the contents of other.         
         vector(const vector<T,Allocator>& x){ // надо ли здесь указывать sz, cap? перегрузка опертора должна случиться раньше
             *this = x;
@@ -70,7 +84,7 @@ namespace ft {
         }
         //
         
-        vector<T,Allocator>& operator=(const vector<T,Allocator>& x);
+        
         template <class InputIterator>
             void assign(InputIterator first, InputIterator last);
         void assign(size_type n, const T& u);
