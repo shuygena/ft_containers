@@ -43,18 +43,17 @@ namespace ft {
             }
 
         // Constructs the container with the contents of the range [first, last]    
-        template <class InputIterator> //как сделать проверку на int?
-            vector(InputIterator first, InputIterator last,
-                const Allocator& = Allocator()): _all(alloc){
-                    bool is_valid;
-                    if (first > last)
-                        throw std::length_error("vector");
-                    _sz = last - first;
-                    _cap = _sz;
-                    _arr = _all.allocate(_cap);
-                    
-                
-            }
+        // template <class InputIterator> //как сделать проверку на int?
+        //     vector(InputIterator first, InputIterator last,
+        //         const Allocator& = Allocator()): _all(alloc){
+        //             bool is_valid;
+        //             if (first > last)
+        //                 throw std::length_error("vector");
+        //             _sz = last - first;
+        //             _cap = _sz;
+        //             _arr = _all.allocate(_cap);
+
+        //     }
 
 
         //Copy constructor. Constructs the container with the copy of the contents of other.         
@@ -87,12 +86,58 @@ namespace ft {
         reverse_iterator rend();
         const_reverse_iterator rend() const;
         // 23.2.4.2 capacity:
-        size_type size() const;
-        size_type max_size() const;
-        void resize(size_type sz, T c = T());
-        size_type capacity() const;
-        bool empty() const;
-        void reserve(size_type n);
+        size_type size() const{
+            return _sz;
+        }
+
+        size_type max_size() const{
+            return _all.max_size();
+        }
+
+        void reserve(size_type n){
+            if (n > _cap)
+            {
+                size_t i;
+                *arr = _all.allocate(n);
+                for (i = 0; i < _sz; i++)
+                    _all.construct(arr + i, *(_arr + i));
+                for (i = 0; i < _sz; i++)
+                    _all.destroy(_arr + i);
+                if (_cap)
+                    _all.deallocate(_arr);
+                _arr = arr;
+                _cap = n;
+            }
+        }
+
+        void resize(size_type sz, T c = T()){ //what if (_cap < sz) ?
+            if (sz < _sz){
+                for (size_t i = sz; i < _sz; i++)
+                _all.destroy(_arr + i);
+                _sz = sz;
+            }
+            else{
+                size_t ncap = _cap;
+                while(ncap < sz)
+                    ncap *= 2;
+                this->reserve(ncap)
+                for (size_t i = _sz; i < sz; i++)
+                    _all.construct(_arr + i, c);
+                    _sz++;
+            }
+        }
+
+        size_type capacity() const{
+            return _cap;
+        }
+
+        bool empty() const{
+            if (_sz == 0)
+                return true;
+            return false;
+        }
+
+        
         // element access:
         reference operator[](size_type n);
         const_reference operator[](size_type n) const;
