@@ -145,7 +145,7 @@ namespace ft {
                 size_t ncap = _cap;
                 while(ncap < sz)
                     ncap *= 2;
-                this->reserve(ncap)
+                reserve(ncap);
                 for (size_t i = _sz; i < sz; i++)
                     _all.construct(_arr + i, c);
                     _sz++;
@@ -172,23 +172,33 @@ namespace ft {
         reference back();
         const_reference back() const;
         // 23.2.4.3 modifiers:
-        void push_back(const T& x);
-        void pop_back();
-        iterator insert(iterator position, const T& x);
-        void insert(iterator position, size_type n, const T& x);
-        template <class InputIterator>
-        void insert(iterator position,
-        InputIterator first, InputIterator last);
-        iterator erase(iterator position);
-        iterator erase(iterator first, iterator last);
-        void swap(vector<T,Allocator>&);
-        void clear()
-        {
+        void clear(){
             for (size_t i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
             _sz = 0;
         }
-        };
+
+        void push_back(const T& x){
+            if (_cap <= _sz)
+                reserve(_cap * 2 + (_cap == 0));
+            _allocator.construct(_arr + _sz, x);
+            _sz++;
+        }
+
+        void pop_back(){
+            _sz--;
+            _all.destroy(_arr + _sz);
+        }
+
+        iterator insert(iterator position, const T& x);
+        void insert(iterator position, size_type n, const T& x);
+        template <class InputIterator>
+            void insert(iterator position,
+            InputIterator first, InputIterator last);
+        iterator erase(iterator position);
+        iterator erase(iterator first, iterator last);
+        void swap(vector<T,Allocator>&);
+};
 template <class T, class Allocator>
 bool operator==(const vector<T,Allocator>& x,
 const vector<T,Allocator>& y);
