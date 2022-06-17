@@ -21,7 +21,7 @@ namespace ft {
         typedef std::reverse_iterator<iterator> reverse_iterator;
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     private:
-        pointer         _arr;
+        pointer         *_arr;
         size_t          _sz;
         size_t          _cap;
         allocator_type  _all;
@@ -123,7 +123,7 @@ namespace ft {
             if (n > _cap)
             {
                 size_t i;
-                *arr = _all.allocate(n);
+                pointer *arr = _all.allocate(n);
                 for (i = 0; i < _sz; i++)
                     _all.construct(arr + i, *(_arr + i));
                 for (i = 0; i < _sz; i++)
@@ -191,7 +191,25 @@ namespace ft {
         }
 
         iterator insert(iterator position, const T& x);
-        void insert(iterator position, size_type n, const T& x);
+        void insert(iterator position, size_type n, const T& x)
+        {
+            size_t i = 0;
+            size_t j = 0;
+            pointer *arr = _all.allocate(n + _sz);
+            while (i++ < position)
+                _all.construct(arr + i, *(_arr + i));
+            while (j++ < n)
+                _all.construct(arr + i - 1 + j, x);
+            while (i++ < _sz)
+                _all.construct(arr + i + j, *(_arr + i));
+            for (i = 0; i < _sz; i++)
+                _all.destroy(_arr + i);
+            if (_cap)
+                _all.deallocate(_arr, _cap);
+            _arr = arr;
+            _cap = n + _sz;
+            _sz += n;
+        }
         template <class InputIterator>
             void insert(iterator position,
             InputIterator first, InputIterator last);
