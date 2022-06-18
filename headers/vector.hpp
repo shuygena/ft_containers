@@ -82,8 +82,8 @@ namespace ft {
             _all.deallocate(_arr, _cap); 
         }
         
-        template <class InputIterator>
-            void assign(InputIterator first, InputIterator last);
+        // template <class InputIterator>
+        //     void assign(InputIterator first, InputIterator last);
         
         void assign(size_t n, const T& u){
             for (size_t i = 0; i < _sz; i++)
@@ -99,7 +99,9 @@ namespace ft {
             _sz = n;            
         }
 
-        allocator_type get_allocator() const;
+        allocator_type get_allocator() const{
+            return(_all);
+        }
 
         // iterators:
         // iterator begin();
@@ -250,17 +252,28 @@ namespace ft {
         }
 };
 template <class T, class Allocator>
-bool operator==(const vector<T,Allocator>& x,
-const vector<T,Allocator>& y);
+    bool operator==(const vector<T,Allocator>& x,
+    const vector<T,Allocator>& y){
+            if (x._sz != y._sz)
+                return false;
+            for (size_t i = 0; i < x._sz; i++)
+                if (x[i] != y[i])
+                    return false;
+            return true;
+        }
+
 template <class T, class Allocator>
-bool operator< (const vector<T,Allocator>& x,
-const vector<T,Allocator>& y);
+    bool operator< (const vector<T,Allocator>& x,
+    const vector<T,Allocator>& y);
 template <class T, class Allocator>
-bool operator!=(const vector<T,Allocator>& x,
-const vector<T,Allocator>& y);
+    bool operator!=(const vector<T,Allocator>& x,
+    const vector<T,Allocator>& y){
+            return !(x == y);
+        }
+
 template <class T, class Allocator>
-bool operator> (const vector<T,Allocator>& x,
-const vector<T,Allocator>& y);
+    bool operator> (const vector<T,Allocator>& x,
+    const vector<T,Allocator>& y);
 template <class T, class Allocator>
 bool operator>=(const vector<T,Allocator>& x,
 const vector<T,Allocator>& y);
