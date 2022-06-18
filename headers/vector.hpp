@@ -163,14 +163,41 @@ namespace ft {
         }
 
         // element access:
-        reference operator[](size_t n);
-        const_reference operator[](size_t n) const;
-        const_reference at(size_t n) const;
-        reference at(size_t n);
-        reference front();
-        const_reference front() const;
-        reference back();
-        const_reference back() const;
+        reference operator[](size_t n){
+            return *(_arr + n);
+        }
+
+        const_reference operator[](size_t n) const{
+            return static_cast<const_reference>(*(_arr + n));
+        }
+
+        const_reference at(size_t n) const{
+            if (n > _cap)
+                throw std::out_of_range("vector at out of range");
+            return static_cast<const_reference>(*(_arr + n));
+        }
+
+        reference at(size_t n){
+            if (n > _cap)
+                throw std::out_of_range("vector at out of range");
+            return *(_arr + n);
+        }
+
+        reference front(){
+            return *_arr;
+        }
+
+        const_reference front() const{
+            return static_cast<const_reference>(*_arr);
+        }
+
+        reference back(){
+            return *(_arr + _sz - 1);
+        }
+
+        const_reference back() const{
+            return static_cast<const_reference>(*(_arr + _sz - 1));
+        }
         // 23.2.4.3 modifiers:
         void clear(){
             for (size_t i = 0; i < _sz; i++)
