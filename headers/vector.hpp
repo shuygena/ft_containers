@@ -242,7 +242,12 @@ namespace ft {
         //     InputIterator first, InputIterator last);
         // iterator erase(iterator position);
         // iterator erase(iterator first, iterator last);
-        void swap(vector<T,Allocator>&);
+        void swap(ft::vector<T,Allocator>& x){
+            std::swap(_arr, x._arr);
+            std::swap(_sz, x._sz);
+            std::swap(_cap, x._cap);
+            std::swap(_all, x._all);
+        }
 };
 template <class T, class Allocator>
 bool operator==(const vector<T,Allocator>& x,
