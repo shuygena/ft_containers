@@ -1,7 +1,7 @@
 NAME = container
 
 SRCS =	main.cpp
-INCLUDES =	stack.hpp
+INCLUDES =	stack.hpp vector.hpp
 
 OBJDIR := objs
 

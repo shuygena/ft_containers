@@ -4,22 +4,22 @@
 #include <iostream>
 
 namespace ft {
-    template <class T, class Allocator = allocator<T> >
+    template <class T, class Allocator = std::allocator<T> >
     class vector {
     public:
         // types:
         typedef typename Allocator::const_reference const_reference;
         typedef typename Allocator::reference reference;
-        typedef implementation defined iterator; // See 23.1
-        typedef implementation defined const_iterator; // See 23.1
-        typedef implementation defined size_type; // See 23.1
-        typedef implementation defined difference_type;// See 23.1
+        // typedef implementation defined iterator; // See 23.1
+        // typedef implementation defined const_iterator; // See 23.1
+        // typedef implementation defined size_t; // See 23.1
+        // typedef implementation defined difference_type;// See 23.1
         typedef T value_type;
         typedef Allocator allocator_type;
         typedef typename Allocator::pointer pointer;
-        typedef typename Allocator::const_pointer const_pointer
-        typedef std::reverse_iterator<iterator> reverse_iterator;
-        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef typename Allocator::const_pointer const_pointer;
+        // typedef std::reverse_iterator<iterator> reverse_iterator;
+        // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     private:
         pointer         *_arr;
         size_t          _sz;
@@ -30,15 +30,15 @@ namespace ft {
         /* Constructs an empty container with the given 
         allocator alloc.*/
         explicit vector(const Allocator& = Allocator()):
-            _arr(0), _sz(0), _cap(0), _all(alloc){}
+            _arr(0), _sz(0), _cap(0), _all(Allocator()){}
         
         /* Constructs the container with count copies of 
         elements with value value.*/
-        explicit vector(size_type n, const T& value = T(),
+        explicit vector(size_t n, const T& value = T(),
             const Allocator& = Allocator()):
-            _sz(n), _cap(n), _all(alloc){
+            _sz(n), _cap(n), _all(Allocator()){
                 _arr = _all.allocate(n);
-                for (size_type i = 0; i < n; i ++)
+                for (size_t i = 0; i < n; i ++)
                     _all.construct(_arr + i, value);
         }
 
@@ -62,11 +62,11 @@ namespace ft {
                 _all.destroy(_arr + i);
             if (_cap)
                 _all.deallocate(_arr, _cap);
-            _arr = _all.allocate(x._cap)
+            _arr = _all.allocate(x._cap);
             _sz = x._sz;
             _cap = x._cap;
             for (size_t i = 0; i < _sz; i++)
-                _all.construct(_arr + i, *(x + i))
+                _all.construct(_arr + i, *(x + i));
             return *this;     
         }
 
@@ -85,7 +85,7 @@ namespace ft {
         template <class InputIterator>
             void assign(InputIterator first, InputIterator last);
         
-        void assign(size_type n, const T& u){
+        void assign(size_t n, const T& u){
             for (size_t i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
             if (n > _cap){
@@ -102,24 +102,24 @@ namespace ft {
         allocator_type get_allocator() const;
 
         // iterators:
-        iterator begin();
-        const_iterator begin() const;
-        iterator end();
-        const_iterator end() const;
-        reverse_iterator rbegin();
-        const_reverse_iterator rbegin() const;
-        reverse_iterator rend();
-        const_reverse_iterator rend() const;
+        // iterator begin();
+        // const_iterator begin() const;
+        // iterator end();
+        // const_iterator end() const;
+        // reverse_iterator rbegin();
+        // const_reverse_iterator rbegin() const;
+        // reverse_iterator rend();
+        // const_reverse_iterator rend() const;
         // 23.2.4.2 capacity:
-        size_type size() const{
+        size_t size() const{
             return _sz;
         }
 
-        size_type max_size() const{
+        size_t max_size() const{
             return _all.max_size();
         }
 
-        void reserve(size_type n){
+        void reserve(size_t n){
             if (n > _cap)
             {
                 size_t i;
@@ -135,7 +135,7 @@ namespace ft {
             }
         }
 
-        void resize(size_type sz, T c = T()){ //what if (_cap < sz) ?
+        void resize(size_t sz, T c = T()){ //what if (_cap < sz) ?
             if (sz < _sz){
                 for (size_t i = sz; i < _sz; i++)
                 _all.destroy(_arr + i);
@@ -152,7 +152,7 @@ namespace ft {
             }
         }
 
-        size_type capacity() const{
+        size_t capacity() const{
             return _cap;
         }
 
@@ -163,10 +163,10 @@ namespace ft {
         }
 
         // element access:
-        reference operator[](size_type n);
-        const_reference operator[](size_type n) const;
-        const_reference at(size_type n) const;
-        reference at(size_type n);
+        reference operator[](size_t n);
+        const_reference operator[](size_t n) const;
+        const_reference at(size_t n) const;
+        reference at(size_t n);
         reference front();
         const_reference front() const;
         reference back();
@@ -181,7 +181,7 @@ namespace ft {
         void push_back(const T& x){
             if (_cap <= _sz)
                 reserve(_cap * 2 + (_cap == 0));
-            _allocator.construct(_arr + _sz, x);
+            _all.construct(_arr + _sz, x);
             _sz++;
         }
 
@@ -190,31 +190,31 @@ namespace ft {
             _all.destroy(_arr + _sz);
         }
 
-        iterator insert(iterator position, const T& x);
-        void insert(iterator position, size_type n, const T& x)
-        {
-            size_t i = 0;
-            size_t j = 0;
-            pointer *arr = _all.allocate(n + _sz);
-            while (i++ < position)
-                _all.construct(arr + i, *(_arr + i));
-            while (j++ < n)
-                _all.construct(arr + i - 1 + j, x);
-            while (i++ < _sz)
-                _all.construct(arr + i + j, *(_arr + i));
-            for (i = 0; i < _sz; i++)
-                _all.destroy(_arr + i);
-            if (_cap)
-                _all.deallocate(_arr, _cap);
-            _arr = arr;
-            _cap = n + _sz;
-            _sz += n;
-        }
-        template <class InputIterator>
-            void insert(iterator position,
-            InputIterator first, InputIterator last);
-        iterator erase(iterator position);
-        iterator erase(iterator first, iterator last);
+        // iterator insert(iterator position, const T& x);
+        // void insert(iterator position, size_t n, const T& x)
+        // {
+        //     size_t i = 0;
+        //     size_t j = 0;
+        //     pointer *arr = _all.allocate(n + _sz);
+        //     while (i++ < position)
+        //         _all.construct(arr + i, *(_arr + i));
+        //     while (j++ < n)
+        //         _all.construct(arr + i - 1 + j, x);
+        //     while (i++ < _sz)
+        //         _all.construct(arr + i + j, *(_arr + i));
+        //     for (i = 0; i < _sz; i++)
+        //         _all.destroy(_arr + i);
+        //     if (_cap)
+        //         _all.deallocate(_arr, _cap);
+        //     _arr = arr;
+        //     _cap = n + _sz;
+        //     _sz += n;
+        // }
+        // template <class InputIterator>
+        //     void insert(iterator position,
+        //     InputIterator first, InputIterator last);
+        // iterator erase(iterator position);
+        // iterator erase(iterator first, iterator last);
         void swap(vector<T,Allocator>&);
 };
 template <class T, class Allocator>
@@ -241,4 +241,4 @@ void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
 }
 
 
-#endif VECTOR_HPP
+#endif
