@@ -26,7 +26,9 @@ namespace ft {
         size_t          _cap;
         allocator_type  _all;
 
-        // construct/copy/destroy:
+// ? ***************************************************************************
+// ? *                       construct/copy/destroy:                           *
+// ? ***************************************************************************
         /* Constructs an empty container with the given 
         allocator alloc.*/
         explicit vector(const Allocator& = Allocator()):
@@ -102,8 +104,10 @@ namespace ft {
         allocator_type get_allocator() const{
             return(_all);
         }
+// ? ***************************************************************************
+// ? *                       iterators:                                        *
+// ? ***************************************************************************
 
-        // iterators:
         // iterator begin();
         // const_iterator begin() const;
         // iterator end();
@@ -112,7 +116,9 @@ namespace ft {
         // const_reverse_iterator rbegin() const;
         // reverse_iterator rend();
         // const_reverse_iterator rend() const;
-        // 23.2.4.2 capacity:
+// ? ***************************************************************************
+// ? *                       capacity:                                         *
+// ? ***************************************************************************
         size_t size() const{
             return _sz;
         }
@@ -164,7 +170,9 @@ namespace ft {
             return false;
         }
 
-        // element access:
+// ? ***************************************************************************
+// ? *                       element access:                                   *
+// ? ***************************************************************************
         reference operator[](size_t n){
             return *(_arr + n);
         }
@@ -200,7 +208,10 @@ namespace ft {
         const_reference back() const{
             return static_cast<const_reference>(*(_arr + _sz - 1));
         }
-        // 23.2.4.3 modifiers:
+// ? ***************************************************************************
+// ? *                       modifiers:                                        *
+// ? ***************************************************************************
+
         void clear(){
             for (size_t i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
