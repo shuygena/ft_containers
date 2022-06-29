@@ -2,20 +2,23 @@
 #define VECTOR_HPP
 
 #include <iostream>
+#include "iterator.hpp"
+#include "random_access_iterator.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft {
     template <class T, class Allocator = std::allocator<T> >
     class vector {
     public:
         // types:
+        typedef T value_type;
+        typedef Allocator allocator_type;        
         typedef typename Allocator::const_reference const_reference;
         typedef typename Allocator::reference reference;
-        // typedef implementation defined iterator; // See 23.1
+        //typedef ft::random_access_iterator<pointer> iterator; // See 23.1
         // typedef implementation defined const_iterator; // See 23.1
-        // typedef implementation defined size_t; // See 23.1
-        // typedef implementation defined difference_type;// See 23.1
-        typedef T value_type;
-        typedef Allocator allocator_type;
+        typedef typename Allocator::sizet_t size_t; // See 23.1
+        typedef typename Allocator::difference_type difference_type;// See 23.1
         typedef typename Allocator::pointer pointer;
         typedef typename Allocator::const_pointer const_pointer;
         // typedef std::reverse_iterator<iterator> reverse_iterator;
