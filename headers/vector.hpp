@@ -5,24 +5,24 @@
 #include "iterator.hpp"
 #include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
+#include "utils.hpp"
 
 namespace ft {
     template <class T, class Allocator = std::allocator<T> >
     class vector {
     public:
-        // types:
         typedef T value_type;
         typedef Allocator allocator_type;        
         typedef typename Allocator::const_reference const_reference;
         typedef typename Allocator::reference reference;
-        //typedef ft::random_access_iterator<pointer> iterator; // See 23.1
-        // typedef implementation defined const_iterator; // See 23.1
-        typedef typename Allocator::sizet_t size_t; // See 23.1
-        typedef typename Allocator::difference_type difference_type;// See 23.1
         typedef typename Allocator::pointer pointer;
         typedef typename Allocator::const_pointer const_pointer;
-        // typedef std::reverse_iterator<iterator> reverse_iterator;
-        // typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef ft::random_access_iterator<pointer> iterator;
+        typedef ft::random_access_iterator<const pointer> const_iterator;
+        typedef typename Allocator::sizet_t size_t;
+        typedef typename Allocator::difference_type difference_type;
+        typedef ft::reverse_iterator<iterator> reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
     private:
         pointer         *_arr;
         size_t          _sz;
@@ -111,14 +111,32 @@ namespace ft {
 // ? *                       iterators:                                        *
 // ? ***************************************************************************
 
-        // iterator begin();
-        // const_iterator begin() const;
-        // iterator end();
-        // const_iterator end() const;
-        // reverse_iterator rbegin();
-        // const_reverse_iterator rbegin() const;
-        // reverse_iterator rend();
-        // const_reverse_iterator rend() const;
+        iterator begin(){
+            return iterator(_arr);
+        }
+        const_iterator begin() const{
+            return const_terator(_arr);
+        }
+        
+        iterator end(){
+            return iterator(_arr + _sz);
+        }
+        
+        const_iterator end() const{
+            return const_iterator(_arr + _sz);
+        }
+        reverse_iterator rbegin(){
+            return reverse_iterator(end());
+        }
+        const_reverse_iterator rbegin() const{
+            return const_reverse_iterator(end());
+        }
+        reverse_iterator rend(){
+            return reverse_iterator(begin());
+        }
+        const_reverse_iterator rend() const{
+            return const_reverse_iterator(begin());
+        }
 // ? ***************************************************************************
 // ? *                       capacity:                                         *
 // ? ***************************************************************************
