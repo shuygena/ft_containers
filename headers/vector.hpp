@@ -274,8 +274,22 @@ namespace ft {
         // template <class InputIterator>
         //     void insert(iterator position,
         //     InputIterator first, InputIterator last);
-        // iterator erase(iterator position);
-        // iterator erase(iterator first, iterator last);
+
+        iterator erase(iterator position){
+            return erase(position, position + 1);
+        }
+
+        iterator erase(iterator first, iterator last){
+            size_t n = std::distance(first, last);
+            for (size_t i = 0; i < n; i++)
+                _all.destroy(first.base() + 1);
+            size_t counter = std::distance(last, end());
+            for (size_t i = 0; i < counter; i++)
+            first.base()[i] = last.base()[i];
+            _sz -= n;
+            return first;
+        }
+
         void swap(ft::vector<T,Allocator>& x){
             std::swap(_arr, x._arr);
             std::swap(_sz, x._sz);
