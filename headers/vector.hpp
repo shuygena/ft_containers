@@ -19,7 +19,7 @@ namespace ft {
         typedef typename Allocator::const_pointer const_pointer;
         typedef ft::random_access_iterator<pointer> iterator;
         typedef ft::random_access_iterator<const pointer> const_iterator;
-        typedef typename Allocator::sizet_t size_t;
+        typedef typename Allocator::size_t size_t;
         typedef typename Allocator::difference_type difference_type;
         typedef ft::reverse_iterator<iterator> reverse_iterator;
         typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -88,7 +88,9 @@ namespace ft {
         }
         
         // template <class InputIterator>
-        //     void assign(InputIterator first, InputIterator last);
+        //     void assign(InputIterator first, InputIterator last){
+
+        //     }
         
         void assign(size_t n, const T& u){
             for (size_t i = 0; i < _sz; i++)
@@ -251,29 +253,36 @@ namespace ft {
             _all.destroy(_arr + _sz);
         }
 
-        // iterator insert(iterator position, const T& x);
-        // void insert(iterator position, size_t n, const T& x)
-        // {
-        //     size_t i = 0;
-        //     size_t j = 0;
-        //     pointer *arr = _all.allocate(n + _sz);
-        //     while (i++ < position)
-        //         _all.construct(arr + i, *(_arr + i));
-        //     while (j++ < n)
-        //         _all.construct(arr + i - 1 + j, x);
-        //     while (i++ < _sz)
-        //         _all.construct(arr + i + j, *(_arr + i));
-        //     for (i = 0; i < _sz; i++)
-        //         _all.destroy(_arr + i);
-        //     if (_cap)
-        //         _all.deallocate(_arr, _cap);
-        //     _arr = arr;
-        //     _cap = n + _sz;
-        //     _sz += n;
-        // }
+        iterator insert(iterator position, const T& x){
+            insert(position, 1, x);
+            return ++position;
+        }
+
+        void insert(iterator position, size_t n, const T& x)
+        {
+            size_t i = 0;
+            size_t j = 0;
+            pointer *arr = _all.allocate(n + _sz);
+            while (i++ < position)
+                _all.construct(arr + i, *(_arr + i));
+            while (j++ < n)
+                _all.construct(arr + i - 1 + j, x);
+            while (i++ < _sz)
+                _all.construct(arr + i + j, *(_arr + i));
+            for (i = 0; i < _sz; i++)
+                _all.destroy(_arr + i);
+            if (_cap)
+                _all.deallocate(_arr, _cap);
+            _arr = arr;
+            _cap = n + _sz;
+            _sz += n;
+        }
+
         // template <class InputIterator>
         //     void insert(iterator position,
-        //     InputIterator first, InputIterator last);
+        //     InputIterator first, InputIterator last){
+
+        //     }
 
         iterator erase(iterator position){
             return erase(position, position + 1);
@@ -297,9 +306,9 @@ namespace ft {
             std::swap(_all, x._all);
         }
 };
-template <class T, class Allocator>
-    bool operator==(const vector<T,Allocator>& x,
-    const vector<T,Allocator>& y){
+    template <class T, class Allocator>
+        bool operator==(const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y){
             if (x._sz != y._sz)
                 return false;
             for (size_t i = 0; i < x._sz; i++)
@@ -308,27 +317,32 @@ template <class T, class Allocator>
             return true;
         }
 
-template <class T, class Allocator>
-    bool operator< (const vector<T,Allocator>& x,
-    const vector<T,Allocator>& y);
-template <class T, class Allocator>
-    bool operator!=(const vector<T,Allocator>& x,
-    const vector<T,Allocator>& y){
+    template <class T, class Allocator>
+        bool operator< (const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y);
+
+    template <class T, class Allocator>
+        bool operator!=(const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y){
             return !(x == y);
         }
 
-template <class T, class Allocator>
-    bool operator> (const vector<T,Allocator>& x,
+    template <class T, class Allocator>
+        bool operator> (const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y);
+
+    template <class T, class Allocator>
+    bool operator>=(const vector<T,Allocator>& x,
     const vector<T,Allocator>& y);
-template <class T, class Allocator>
-bool operator>=(const vector<T,Allocator>& x,
-const vector<T,Allocator>& y);
-template <class T, class Allocator>
-bool operator<=(const vector<T,Allocator>& x,
-const vector<T,Allocator>& y);
-// specialized algorithms:
-template <class T, class Allocator>
-void swap(vector<T,Allocator>& x, vector<T,Allocator>& y);
+
+    template <class T, class Allocator>
+        bool operator<=(const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y);
+    // specialized algorithms:
+    template <class T, class Allocator>
+    void swap(vector<T,Allocator>& x, vector<T,Allocator>& y){
+        x.swap(y);
+    }
 }
 
 
