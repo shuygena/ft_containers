@@ -48,17 +48,18 @@ namespace ft {
         }
 
         // Constructs the container with the contents of the range [first, last]    
-        // template <class InputIterator> //как сделать проверку на int?
-        //     vector(InputIterator first, InputIterator last,
-        //         const Allocator& = Allocator()): _all(alloc){
-        //             bool is_valid;
-        //             if (first > last)
-        //                 throw std::length_error("vector");
-        //             _sz = last - first;
-        //             _cap = _sz;
-        //             _arr = _all.allocate(_cap);
+        template <class InputIterator> //как сделать проверку на int?
+            vector(InputIterator first, InputIterator last, const Allocator& = Allocator(),
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0): _all(Allocator()){
+                    if (first > last)
+                        throw std::length_error("vector");
+                    _sz = last - first;
+                    _cap = _sz;
+                    _arr = _all.allocate(_cap);
+                    for (difference_type i = 0; i < static_cast<difference_type>(_sz); i++)
+                        _all.construct(_arr + i, *(first + i));
 
-        //     }
+            }
 
         vector<T,Allocator>& operator=(const vector<T,Allocator>& x){
             if (this == &x)
@@ -87,10 +88,28 @@ namespace ft {
             _all.deallocate(_arr, _cap); 
         }
         
-        // template <class InputIterator>
-        //     void assign(InputIterator first, InputIterator last){
-
-        //     }
+        template <class InputIterator>
+            void assign(InputIterator first, InputIterator last,
+             typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0){
+                if (first > last)
+                    throw std::logic_error("vector");
+                difference_type counter = last - first;
+                for (size_t i = 0; i < _sz; i++)
+                    _all.destroy(_arr + i);
+                if (counter > static_cast<difference_type>(_cap)){
+                    _all.deallocate(_arr, _cap);
+                    _arr = _all.allocate(counter);
+                    _cap = counter;
+                }
+                iterator it = begin();
+                while (first < last)
+                {
+                    _all.construct(&(*it), *first);
+                    it++;
+                    first++;
+                }
+                _sz = counter;
+            }
         
         void assign(size_t n, const T& u){
             for (size_t i = 0; i < _sz; i++)
@@ -278,11 +297,47 @@ namespace ft {
             _sz += n;
         }
 
-        // template <class InputIterator>
-        //     void insert(iterator position,
-        //     InputIterator first, InputIterator last){
-
-        //     }
+        template <class InputIterator>
+            void insert(iterator position, InputIterator first, InputIterator last,
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0){
+                if (position < begin() || position > end() || first > last)
+                    throw std::logic_error("vector");
+                size_t start = static_cast<size_t>(position - begin());
+                size_t counter = static_cast<size_t>(last - first);
+                if (_sz + counter > _cap)
+                {
+                    size_t cap = _cap * 2;
+                    while (cap < _sz + counter)
+                        cap = _cap * 2;
+                    pointer *arr = _all.allocate(cap);
+                    size_t i = 0;
+                    size_t j = 0;
+                    while (i++ < position)
+                        _all.construct(arr + i, *(_arr + i));
+                    while (j++ < counter)
+                        _all.construct(arr + i - 1 + j, *(first++));
+                    while (i++ < _sz)
+                        _all.construct(arr + i + j, *(_arr + i));
+                    for (i = 0; i < _sz; i++)
+                        _all.destroy(_arr + i);
+                    if (_cap)
+                         _all.deallocate(_arr, _cap);
+                    _arr = arr;
+                    _cap = cap;
+                    _sz += counter;
+                }
+                else{
+                    for (size_t i = _sz; i > static_cast<size_t>(start); i--){
+                        _all.destroy(_arr + i + counter - 1);
+                        _all.construct(_arr + i + counter - 1, *(_arr + i - 1));
+                    }
+                    for (size_t i = 0; i < static_cast<size_t>(counter); i++){
+                        _all.destroy(_arr + i + counter);
+                        _all.construct(_arr + start + i, *(first++));
+                    }
+                    _sz += counter;
+                }
+            }
 
         iterator erase(iterator position){
             return erase(position, position + 1);
@@ -319,7 +374,9 @@ namespace ft {
 
     template <class T, class Allocator>
         bool operator< (const vector<T,Allocator>& x,
-        const vector<T,Allocator>& y);
+        const vector<T,Allocator>& y){
+            return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
+        }
 
     template <class T, class Allocator>
         bool operator!=(const vector<T,Allocator>& x,
@@ -329,15 +386,21 @@ namespace ft {
 
     template <class T, class Allocator>
         bool operator> (const vector<T,Allocator>& x,
-        const vector<T,Allocator>& y);
+        const vector<T,Allocator>& y){
+            return y < x;
+        }
 
     template <class T, class Allocator>
     bool operator>=(const vector<T,Allocator>& x,
-    const vector<T,Allocator>& y);
+    const vector<T,Allocator>& y){
+        return !(x < y);
+    }
 
     template <class T, class Allocator>
         bool operator<=(const vector<T,Allocator>& x,
-        const vector<T,Allocator>& y);
+        const vector<T,Allocator>& y){
+            return !(x > y);
+        }
     // specialized algorithms:
     template <class T, class Allocator>
     void swap(vector<T,Allocator>& x, vector<T,Allocator>& y){
