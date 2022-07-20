@@ -8,18 +8,18 @@
 #include "utils.hpp"
 
 namespace ft {
-    template <class T, class Alloc = std::allocator<T> >
+    template <class T, class Allocator = std::allocator<T> >
     class vector {
     public:
         typedef T value_type;
-        typedef Alloc allocator_type;        
-        typedef typename Alloc::const_reference const_reference;
-        typedef typename Alloc::reference reference;
-        typedef typename Alloc::pointer pointer;
-        typedef typename Alloc::const_pointer const_pointer;
+        typedef Allocator allocator_type;        
+        typedef typename Allocator::const_reference const_reference;
+        typedef typename Allocator::reference reference;
+        typedef typename Allocator::pointer pointer;
+        typedef typename Allocator::const_pointer const_pointer;
         typedef ft::random_access_iterator<pointer> iterator;
         typedef ft::random_access_iterator<const pointer> const_iterator;
-        typedef typename Alloc::difference_type difference_type;
+        typedef typename Allocator::difference_type difference_type;
         typedef ft::reverse_iterator<iterator> reverse_iterator;
         typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
     private:
@@ -32,16 +32,16 @@ namespace ft {
 // ? *                       construct/copy/destroy:                           *
 // ? ***************************************************************************
         /* Constructs an empty container with the given 
-        Alloc alloc.*/
+        Allocator alloc.*/
     public:
-        explicit vector(const Alloc& = Alloc()):
-            _arr(0), _sz(0), _cap(0), _all(Alloc()){}
+        explicit vector(const Allocator& = Allocator()):
+            _arr(0), _sz(0), _cap(0), _all(Allocator()){}
         
         /* Constructs the container with count copies of 
         elements with value value.*/
         explicit vector(size_t n, const T& value = T(),
-            const Alloc& = Alloc()):
-            _sz(n), _cap(n), _all(Alloc()){
+            const Allocator& = Allocator()):
+            _sz(n), _cap(n), _all(Allocator()){
                 _arr = _all.allocate(n);
                 for (size_t i = 0; i < n; i ++)
                     _all.construct(_arr + i, value);
@@ -49,8 +49,8 @@ namespace ft {
 
         // Constructs the container with the contents of the range [first, last]    
         template <class InputIterator> //как сделать проверку на int?
-            vector(InputIterator first, InputIterator last, const Alloc& = Alloc(),
-            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0): _all(Alloc()){
+            vector(InputIterator first, InputIterator last, const Allocator& = Allocator(),
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0): _all(Allocator()){
                     if (first > last)
                         throw std::length_error("vector");
                     _sz = last - first;
@@ -61,7 +61,7 @@ namespace ft {
 
             }
 
-        vector<T,Alloc>& operator=(const vector<T,Alloc>& x){
+        vector<T,Allocator>& operator=(const vector<T,Allocator>& x){
             if (this == &x)
                 return *this;
             for (size_t i = 0; i < _sz; i++)
@@ -77,7 +77,7 @@ namespace ft {
         }
 
         //Copy constructor. Constructs the container with the copy of the contents of other.         
-        vector(const vector<T,Alloc>& x){ // надо ли здесь указывать sz, cap? перегрузка опертора должна случиться раньше
+        vector(const vector<T,Allocator>& x){ // надо ли здесь указывать sz, cap? перегрузка опертора должна случиться раньше
             *this = x;
         }
 
@@ -354,16 +354,16 @@ namespace ft {
             return first;
         }
 
-        void swap(ft::vector<T,Alloc>& x){
+        void swap(ft::vector<T,Allocator>& x){
             std::swap(_arr, x._arr);
             std::swap(_sz, x._sz);
             std::swap(_cap, x._cap);
             std::swap(_all, x._all);
         }
 };
-    template <class T, class Alloc>
-        bool operator==(const vector<T,Alloc>& x,
-        const vector<T,Alloc>& y){
+    template <class T, class Allocator>
+        bool operator==(const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y){
             if (x._sz != y._sz)
                 return false;
             for (size_t i = 0; i < x._sz; i++)
@@ -372,38 +372,40 @@ namespace ft {
             return true;
         }
 
-    template <class T, class Alloc>
-        bool operator< (const vector<T,Alloc>& x,
-        const vector<T,Alloc>& y){
+    template <class T, class Allocator>
+        bool operator< (const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y){
             return ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
         }
 
-    template <class T, class Alloc>
-        bool operator!=(const vector<T,Alloc>& x,
-        const vector<T,Alloc>& y){
+    template <class T, class Allocator>
+        bool operator!=(const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y){
             return !(x == y);
         }
 
-    template <class T, class Alloc>
-        bool operator> (const vector<T,Alloc>& x,
-        const vector<T,Alloc>& y){
+    template <class T, class Allocator>
+        bool operator> (const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y){
             return y < x;
         }
 
-    template <class T, class Alloc>
-    bool operator>=(const vector<T,Alloc>& x,
-    const vector<T,Alloc>& y){
+    template <class T, class Allocator>
+    bool operator>=(const vector<T,Allocator>& x,
+    const vector<T,Allocator>& y){
         return !(x < y);
     }
 
-    template <class T, class Alloc>
-        bool operator<=(const vector<T,Alloc>& x,
-        const vector<T,Alloc>& y){
+    template <class T, class Allocator>
+        bool operator<=(const vector<T,Allocator>& x,
+        const vector<T,Allocator>& y){
             return !(x > y);
         }
-    // specialized algorithms:
-    template <class T, class Alloc>
-    void swap(vector<T,Alloc>& x, vector<T,Alloc>& y){
+// ? ***************************************************************************
+// ? *                       specialized algorithms:                           *
+// ? ***************************************************************************
+    template <class T, class Allocator>
+    void swap(vector<T,Allocator>& x, vector<T,Allocator>& y){
         x.swap(y);
     }
 }

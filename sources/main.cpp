@@ -1,5 +1,6 @@
 #include "stack.hpp"
 #include "vector.hpp"
+#include "map.hpp"
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -36,7 +37,7 @@ int main(){
     v1.push_back(8);
     std::cout << "capacity: " << v1.capacity()<< std::endl;
     for (int i = 0; i < int(v1.size()); i++)
-        std::cout << "v1[" << i << "]" << v1[i] << std::endl;
+        std::cout << "v1[" << i << "] = " << v1[i] << std::endl;
     v1.clear();
     std::cout << "capacity after clear: " << v1.capacity()<< std::endl;
     std::cout << "size after clear: " << v1.size()<< std::endl;
@@ -52,7 +53,7 @@ int main(){
     v2.push_back(8);
     std::cout << "capacity: " << v2.capacity()<< std::endl;
     for (int i = 0; i < int(v2.size()); i++)
-        std::cout << "v2[" << i << "]" << v2[i] << std::endl;
+        std::cout << "v2[" << i << "] = " << v2[i] << std::endl;
     v2.clear();
     std::cout << "capacity after clear: " << v2.capacity()<< std::endl;
     std::cout << "size after clear: " << v2.size()<< std::endl;
