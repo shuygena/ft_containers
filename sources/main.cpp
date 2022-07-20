@@ -19,6 +19,9 @@ void test_stack(void)
     s1.push(4);
     std::cout << "Top element: " << s1.top() << std::endl;
     std::cout << "Size of stack: " << s1.size() << std::endl;
+    s1.pop();
+    std::cout << "Top element: " << s1.top() << std::endl;
+    std::cout << "Size of stack: " << s1.size() << std::endl;
     
 
     std::cout << "=======================================\n";
@@ -32,30 +35,14 @@ void test_stack(void)
     s2.push(4);
     std::cout << "Top element: " << s2.top() << std::endl;
     std::cout << "Size of stack: " << s2.size() << std::endl;
-    
+    s2.pop();
+    std::cout << "Top element: " << s2.top() << std::endl;
+    std::cout << "Size of stack: " << s2.size() << std::endl;
 
 }
 
-int main(){
-    
-    std::cout << "=======================================\n";
-    std::cout << "\t\tFT STACK\n";
-    std::cout << "=======================================\n";
-
-    ft::stack<int > s1;
-    s1.push(1);
-    std::cout << "Top element: " << s1.top() << std::endl;
-    s1.push(2);
-    s1.push(4);
-    std::cout << "Top element: " << s1.top() << std::endl;
-    std::cout << "Size of stack: " << s1.size() << std::endl;
-
-    // std::vector<int> v1;
-    // std::deque<int> d1;
-    // std::stack<int> s2(d1);
-    // s2.push(6);
-    // std::cout << "Top element s2: " << s2.top() << std::endl;
-
+void test_vector(void)
+{
     std::cout << "=======================================\n";
     std::cout << "\t\tFT VECTOR\n";
     std::cout << "=======================================\n";
@@ -87,5 +74,11 @@ int main(){
     v2.clear();
     std::cout << "capacity after clear: " << v2.capacity()<< std::endl;
     std::cout << "size after clear: " << v2.size()<< std::endl;
+}
+
+int main(){
+    
+    test_stack();
+    test_vector();
     
 }
