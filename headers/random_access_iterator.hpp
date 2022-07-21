@@ -17,7 +17,7 @@ namespace ft {
     protected:
         pointer current;
     public:
-        random_access_iterator(pointer current):current(current){}
+        random_access_iterator(pointer current = 0):current(current){}
         template<class U>
             random_access_iterator(const ft::random_access_iterator<U>& u):
                 current(u.base()){}
@@ -29,9 +29,9 @@ namespace ft {
 
         random_access_iterator& operator=(const random_access_iterator& u){
             if (this == &u)
-                return current;
+                return *this;
             current = u.current;
-            return current;
+            return *this;
         }
 
         reference operator*() const{
@@ -60,8 +60,8 @@ namespace ft {
             return tmp;
         }
     
-        random_access_iterator operator+ (difference_type n) const{
-            random_access_iterator(current + n);
+        random_access_iterator operator+(difference_type n) const{
+            return random_access_iterator(current + n);
         }
 
         random_access_iterator& operator+=(difference_type n){
@@ -86,39 +86,39 @@ namespace ft {
     template <class T> bool operator==(
         const random_access_iterator<T>& x,
         const random_access_iterator<T>& y){
-            return &(*x) == y.current;
+            return &(*x) == &(*y);
         }
     template <class T> bool operator<(
         const random_access_iterator<T>& x,
         const random_access_iterator<T>& y){
-            return &(*x) < y.current;
+            return &(*x) < &(*y);
         }
     template <class T> bool operator!=(
         const random_access_iterator<T>& x,
         const random_access_iterator<T>& y){
-            return &(*x) != y.current;
+            return &(*x) != &(*y);
         }
     template <class T> bool operator>(
         const random_access_iterator<T>& x,
         const random_access_iterator<T>& y){
-           return &(*x) > y.current; 
+           return &(*x) > &(*y); 
         }
     template <class T> bool operator>=(
         const random_access_iterator<T>& x,
         const random_access_iterator<T>& y){
-            return &(*x) >= y.current;
+            return &(*x) >= &(*y);
         }
 
     template <class T> bool operator<=(
         const random_access_iterator<T>& x,
         const random_access_iterator<T>& y){
-            return &(*x) <= y.current;
+            return &(*x) <= &(*y);
         }
     template <class T>
         typename random_access_iterator<T>::difference_type operator-(
             const random_access_iterator<T>& x,
             const random_access_iterator<T>& y){
-            return &(*x) - y.current;   
+            return &(*x) - &(*y);   
             }
     template <class T>
         random_access_iterator<T> operator+(
