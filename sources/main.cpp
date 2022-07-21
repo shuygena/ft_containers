@@ -58,6 +58,7 @@ void test_vector(void)
     v1.clear();
     std::cout << "capacity after clear: " << v1.capacity()<< std::endl;
     std::cout << "size after clear: " << v1.size()<< std::endl;
+    std::cout << "begin() = " << *(v1.begin()) << std::endl;
     
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD VECTOR\n";
@@ -74,6 +75,7 @@ void test_vector(void)
     v2.clear();
     std::cout << "capacity after clear: " << v2.capacity()<< std::endl;
     std::cout << "size after clear: " << v2.size()<< std::endl;
+    std::cout << "begin() = " << *(v2.begin()) << std::endl;
 }
 
 int main(){
