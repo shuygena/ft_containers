@@ -2,6 +2,7 @@
 #define UTILS_HPP
 
 #include <iostream>
+#include "vector.hpp"
 namespace ft {
     template <bool B, class T = void>
     struct enable_if{};
