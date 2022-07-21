@@ -17,8 +17,8 @@ namespace ft {
         typedef typename Allocator::reference reference;
         typedef typename Allocator::pointer pointer;
         typedef typename Allocator::const_pointer const_pointer;
-        typedef ft::random_access_iterator<pointer> iterator;
-        typedef ft::random_access_iterator<const pointer> const_iterator;
+        typedef ft::random_access_iterator<value_type> iterator;
+        typedef ft::random_access_iterator<const value_type> const_iterator;
         typedef typename Allocator::difference_type difference_type;
         typedef ft::reverse_iterator<iterator> reverse_iterator;
         typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -44,7 +44,7 @@ namespace ft {
             _sz(n), _cap(n), _all(Allocator()){
                 _arr = _all.allocate(n);
                 for (size_t i = 0; i < n; i ++)
-                    _all.construct(_arr + i, value);
+                    * (_arr + i) = value;
         }
 
         // Constructs the container with the contents of the range [first, last]    
@@ -57,7 +57,7 @@ namespace ft {
                     _cap = _sz;
                     _arr = _all.allocate(_cap);
                     for (difference_type i = 0; i < static_cast<difference_type>(_sz); i++)
-                        _all.construct(_arr + i, *(first + i));
+                        _arr[i] = *(first + i);
 
             }
 
@@ -72,13 +72,15 @@ namespace ft {
             _sz = x._sz;
             _cap = x._cap;
             for (size_t i = 0; i < _sz; i++)
-                _all.construct(_arr + i, *(x + i));
+                _arr[i]= x._arr[i];
             return *this;
         }
 
         //Copy constructor. Constructs the container with the copy of the contents of other.         
         vector(const vector<T,Allocator>& x){ // надо ли здесь указывать sz, cap? перегрузка опертора должна случиться раньше
-            *this = x;
+            _arr = _all.allocate(x.capacity());
+            for (size_t i = 0; i < x.size(); i++)
+                _arr[i] = x._arr[i];
         }
 
         ~vector()
@@ -101,13 +103,9 @@ namespace ft {
                     _arr = _all.allocate(counter);
                     _cap = counter;
                 }
-                iterator it = begin();
-                while (first < last)
-                {
-                    _all.construct(&(*it), *first);
-                    it++;
+                for ( ; first < last; first++)
+                    this->push_back(*first);
                     first++;
-                }
                 _sz = counter;
             }
         
@@ -121,7 +119,7 @@ namespace ft {
                 _arr = _all.allocate(_cap);  
             }
             for (size_t i = 0; i < n; i++)
-                _all.construct(_arr + i, u);
+                _arr[i] = u;
             _sz = n;            
         }
 
@@ -136,7 +134,7 @@ namespace ft {
             return iterator(_arr);
         }
         const_iterator begin() const{
-            return const_terator(_arr);
+            return const_iterator(_arr);
         }
         
         iterator end(){
@@ -175,7 +173,7 @@ namespace ft {
                 size_t i;
                 pointer arr = _all.allocate(n);
                 for (i = 0; i < _sz; i++)
-                    _all.construct(arr + i, *(_arr + i));
+                    arr[i] = *(_arr + i);
                 for (i = 0; i < _sz; i++)
                     _all.destroy(_arr + i);
                 if (_cap)
@@ -197,7 +195,7 @@ namespace ft {
                     ncap *= 2;
                 reserve(ncap);
                 for (size_t i = _sz; i < sz; i++)
-                    _all.construct(_arr + i, c);
+                    _arr[i] = c;
                     _sz++;
             }
         }
@@ -263,7 +261,7 @@ namespace ft {
         void push_back(const T& x){
             if (_cap <= _sz)
                 reserve(_cap * 2 + (_cap == 0));
-            _all.construct(_arr + _sz, x);
+            _arr[_sz] = x;
             _sz++;
         }
 
@@ -281,13 +279,14 @@ namespace ft {
         {
             size_t i = 0;
             size_t j = 0;
+            size_t distance = static_cast<size_t>(position - begin());
             pointer arr = _all.allocate(n + _sz);
-            while (i++ < position)
-                _all.construct(arr + i, *(_arr + i));
+            while (i++ < distance)
+                arr[i] = *(_arr + i);
             while (j++ < n)
-                _all.construct(arr + i - 1 + j, x);
+                arr[i - 1 + j] = x;
             while (i++ < _sz)
-                _all.construct(arr + i + j, *(_arr + i));
+                arr[i + j] = *(_arr + i);
             for (i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
             if (_cap)
@@ -312,12 +311,12 @@ namespace ft {
                     pointer arr = _all.allocate(cap);
                     size_t i = 0;
                     size_t j = 0;
-                    while (i++ < position)
-                        _all.construct(arr + i, *(_arr + i));
+                    while (i++ < start) //distance
+                        arr[i] = *(_arr + i);
                     while (j++ < counter)
-                        _all.construct(arr + i - 1 + j, *(first++));
+                        arr[i - 1 + j] = *(first++);
                     while (i++ < _sz)
-                        _all.construct(arr + i + j, *(_arr + i));
+                        arr[i + j] = *(_arr + i);
                     for (i = 0; i < _sz; i++)
                         _all.destroy(_arr + i);
                     if (_cap)
@@ -329,11 +328,11 @@ namespace ft {
                 else{
                     for (size_t i = _sz; i > static_cast<size_t>(start); i--){
                         _all.destroy(_arr + i + counter - 1);
-                        _all.construct(_arr + i + counter - 1, *(_arr + i - 1));
+                        _arr[i + counter - 1] = *(_arr + i - 1);
                     }
                     for (size_t i = 0; i < static_cast<size_t>(counter); i++){
                         _all.destroy(_arr + i + counter);
-                        _all.construct(_arr + start + i, *(first++));
+                        _arr[start + i] = *(first++);
                     }
                     _sz += counter;
                 }
@@ -364,9 +363,9 @@ namespace ft {
     template <class T, class Allocator>
         bool operator==(const vector<T,Allocator>& x,
         const vector<T,Allocator>& y){
-            if (x._sz != y._sz)
+            if (x.size() != y.size())
                 return false;
-            for (size_t i = 0; i < x._sz; i++)
+            for (size_t i = 0; i < x.size(); i++)
                 if (x[i] != y[i])
                     return false;
             return true;
