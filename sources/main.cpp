@@ -59,7 +59,24 @@ void test_vector(void)
     std::cout << "capacity after clear: " << v1.capacity()<< std::endl;
     std::cout << "size after clear: " << v1.size()<< std::endl;
     std::cout << "begin() = " << *(v1.begin()) << std::endl;
+    ft::vector<int> vr;
+    vr.assign(783, 1);
+    std::cout << "capacity(): assign 783: " << vr.capacity()<< std::endl;
+    vr.push_back(vr.capacity());
+    std::cout << "capacity(): push_back(): " << vr.capacity()<< std::endl;
+    vr.resize(88);
+    std::cout << "capacity(): resize 88: " << vr.capacity()<< std::endl;
+    std::cout << "size(): resize 88: " << vr.size()<< std::endl;
+
+    //ATENTION THERE IS CONSTRUCTOR TESTS
+    std::vector<int> v;
+    ft::vector<int> vector(3, 3);
+	std::vector<int> tmp(1000, 4);
+	ft::vector<int> tmp2(tmp.begin(), tmp.end());
+	v.push_back(tmp2.size());
+	v.push_back(tmp2.capacity());
     
+
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD VECTOR\n";
     std::cout << "=======================================\n";
@@ -76,6 +93,15 @@ void test_vector(void)
     std::cout << "capacity after clear: " << v2.capacity()<< std::endl;
     std::cout << "size after clear: " << v2.size()<< std::endl;
     std::cout << "begin() = " << *(v2.begin()) << std::endl;
+
+    std::vector<int> vstd;
+    vstd.assign(783, 1);
+    std::cout << "capacity(): assign 783: " << vstd.capacity()<< std::endl;
+    vstd.push_back(vstd.capacity());
+    std::cout << "capacity(): push_back(): " << vstd.capacity()<< std::endl;
+    vstd.resize(88);
+    std::cout << "capacity(): resize 88: " << vstd.capacity()<< std::endl;
+    std::cout << "size(): resize 88: " << vstd.size()<< std::endl;
 }
 
 int main(){
