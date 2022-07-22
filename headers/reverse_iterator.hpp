@@ -19,8 +19,11 @@ namespace ft {
         typedef typename iterator_traits<Iterator>::pointer pointer;
 
         reverse_iterator(){}
+
         explicit reverse_iterator(Iterator x): current(x){}
-        template <class U> reverse_iterator(const ft::reverse_iterator<U>& u){
+
+        template <class U>
+        reverse_iterator(const ft::reverse_iterator<U>& u){
             current = u.current;
         }
     
@@ -55,7 +58,7 @@ namespace ft {
     }
     
     reverse_iterator operator+ (difference_type n) const{
-        reverse_iterator(current-n);
+        return reverse_iterator(current-n);
     }
 
     reverse_iterator& operator+=(difference_type n){
