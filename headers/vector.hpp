@@ -43,12 +43,12 @@ namespace ft {
             const Allocator& = Allocator()):
             _sz(n), _cap(n), _all(Allocator()){
                 _arr = _all.allocate(n);
-                for (size_t i = 0; i < n; i ++)
-                    * (_arr + i) = value;
+                for (size_t i = 0; i < n; i++)
+                    *(_arr + i) = value;
         }
 
         // Constructs the container with the contents of the range [first, last]    
-        template <class InputIterator> //как сделать проверку на int?
+        template <class InputIterator> //как сделать проверку на int? : enable_if
             vector(InputIterator first, InputIterator last, const Allocator& = Allocator(),
             typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0): _all(Allocator()){
                     if (first > last)
@@ -77,11 +77,20 @@ namespace ft {
         }
 
         //Copy constructor. Constructs the container with the copy of the contents of other.         
-        vector(const vector<T,Allocator>& x){ // надо ли здесь указывать sz, cap? перегрузка опертора должна случиться раньше
+        // vector(const vector<T,Allocator>& x): _arr(0), _cap(x._cap), _sz(x._sz), _all(Allocator()){ 
+        //     _arr = _all.allocate(x.capacity());
+        //     for (size_t i = 0; i < x.size(); i++)
+        //         _arr[i] = x._arr[i];
+        // }
+
+        // Copy constructor for tests
+        vector(const vector& x): _arr(0), _cap(x._cap), _sz(x._sz), _all(x.get_allocator()){ 
             _arr = _all.allocate(x.capacity());
             for (size_t i = 0; i < x.size(); i++)
                 _arr[i] = x._arr[i];
         }
+
+
 
         ~vector()
         {
@@ -114,8 +123,9 @@ namespace ft {
                 _all.destroy(_arr + i);
             if (n > _cap){
                 _all.deallocate(_arr, _cap);
-                while (_cap < n)
-                    _cap *= 2;
+                _cap = n;
+                // while (_cap < n)
+                //     _cap = (2 * _cap) + (_cap == 0); //assign fix
                 _arr = _all.allocate(_cap);  
             }
             for (size_t i = 0; i < n; i++)
@@ -190,7 +200,7 @@ namespace ft {
                 _sz = sz;
             }
             else{
-                size_t ncap = _cap;
+                size_t ncap = _cap + (_cap == 0);
                 while(ncap < sz)
                     ncap *= 2;
                 reserve(ncap);
@@ -305,7 +315,7 @@ namespace ft {
                 size_t counter = static_cast<size_t>(last - first);
                 if (_sz + counter > _cap)
                 {
-                    size_t cap = _cap * 2;
+                    size_t cap = _cap * 2 + (_cap == 0);
                     while (cap < _sz + counter)
                         cap = _cap * 2;
                     pointer arr = _all.allocate(cap);
