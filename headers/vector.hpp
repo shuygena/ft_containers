@@ -209,7 +209,7 @@ namespace ft {
                 reserve(ncap);
                 for (size_t i = _sz; i < sz; i++)
                     _arr[i] = c;
-                    _sz++;
+                _sz = sz;
             }
         }
 
