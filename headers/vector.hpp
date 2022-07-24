@@ -17,6 +17,7 @@ namespace ft {
         typedef typename Allocator::reference reference;
         typedef typename Allocator::pointer pointer;
         typedef typename Allocator::const_pointer const_pointer;
+        typedef typename Allocator::size_type size_type;
         typedef ft::random_access_iterator<value_type> iterator;
         typedef ft::random_access_iterator<const value_type> const_iterator;
         typedef typename Allocator::difference_type difference_type;
@@ -66,7 +67,6 @@ namespace ft {
                 return *this;
             for (size_t i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
-            if (_cap)
                 _all.deallocate(_arr, _cap);
             _arr = _all.allocate(x._cap);
             _sz = x._sz;
@@ -77,13 +77,12 @@ namespace ft {
         }
 
         // Copy constructor
-        vector(const vector& x): _arr(0), _cap(x._cap), _sz(x._sz), _all(x.get_allocator()){ 
-            _arr = _all.allocate(x.capacity());
+        vector(const vector& x): _arr(0), _sz(x._sz), _cap(x._cap), _all(x.get_allocator()){ 
+            //std::cout << "CALL" << std::endl;  
+            _arr = _all.allocate(x._cap);
             for (size_t i = 0; i < x.size(); i++)
                 _arr[i] = x._arr[i];
         }
-
-
 
         ~vector()
         {
