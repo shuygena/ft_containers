@@ -2,11 +2,12 @@
 #define STACK_HPP
 
 #include <iostream>
-#include <vector>
+#include "vector.hpp"
+// #include <vector>
 
 namespace ft
 {
-    template <class T, class Container = std::vector<T> > //std -> ft
+    template <class T, class Container = ft::vector<T> >
     class stack
     {
         public:
