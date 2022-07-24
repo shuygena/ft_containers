@@ -98,29 +98,31 @@ void test_vector(void)
     vre.push_back(v1.size());
     vre.push_back(v1.capacity());
     v1.resize(30);
-    vre.push_back(v1.size());
         std::cout << "v1 resize: " << v1.size() << std::endl;
-    for (size_t i = 0; i < v1.size(); i++)
-        std::cout << "["<< v1[i] << "] ";
-    std::cout << "\n eof\n";
-    //insert(iterator first, iterator end)
-    // ft::vector::iterator pos = v1.begin();
-    // for (int i = 0; i < 25; i++)
-    //     pos++;
+
     std::cout << GREEN << "insert(), insert(range)"<< STOP << std::endl;
-    v1.insert(v1.begin(), vre.begin(), vre.end());
-    for (size_t i = 0; i < v1.size(); i++)
-        std::cout << "["<< v1[i] << "] ";
-    std::cout << "\n";
-    std::cout << "insert: size: " << v1.size() << " capacity: " << v1.capacity() << std::endl;
-    //ATENTION THERE IS CONSTRUCTOR TESTS
-    // std::vector<int> v;
-    // ft::vector<int> vector(3, 3);
-	// std::vector<int> tmp(1000, 4);
-	// ft::vector<int> tmp2(tmp.begin(), tmp.end());
-	// v.push_back(tmp2.size());
-	// v.push_back(tmp2.capacity());
-    
+    v1.insert(v1.begin(), vre.begin(), vre.end());//insert(iterator first, iterator end)
+    std::cout << "insert: size: " << v1.size() << " capacity: " << v1.capacity() << std::endl; 
+    v1.insert(v1.end() - 8, 5, 44);
+    std::cout << "insert(value): value: " << v1[24] <<
+    " size: " << v1.size() << " capacity: " << v1.capacity() << std::endl;
+    // for (int i = 0; i < int(v1.size()); i++)
+    //     std::cout << "[" << v1[i] << "]";
+    // std::cout << "\n";
+    v1.clear();
+    v1.assign(1000, 1);
+    v1.insert(v1.end() - 50, 4200, 2);
+    std::cout << "insert(fill): size = " << v1.size() << "; capacity = " << v1.capacity() << std::endl;
+    v1.insert(v1.end() - 50, 8);
+    std::cout << "insert(value): size = " << v1.size() << "; capacity = " << v1.capacity() << std::endl;
+    // for (int i = 0; i < int(v1.size()); i++)
+    //     std::cout << "[" << v1[i] << "]";
+    // std::cout << "\n";
+
+    std::cout << GREEN << "erase()"<< STOP << std::endl;
+    std::cout << "value before erase = " << v1[v1.size() - 50]<< "; size = " << v1.size()<< std::endl;
+    v1.erase(v1.end() - 50);
+    std::cout << "value after erase = " << v1[v1.size() - 50]<< "; size = " << v1.size()<< std::endl;
 
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD VECTOR\n";
@@ -173,17 +175,28 @@ void test_vector(void)
     v2.resize(30);
     std::cout << "v2 resize: " << v2.size() << std::endl;
 
-    for (size_t i = 0; i < v2.size(); i++)
-        std::cout << "["<< v2[i] << "] ";
-    std::cout << "\n eof\n";
-
-    std::cout << GREEN << "insert(), insert(range)"<< STOP << std::endl;
-   //insert(iterator first, iterator end)
+    std::cout << GREEN << "insert(range), insert(fill), insert(value)"<< STOP << std::endl;
     v2.insert(v2.begin(), vres.begin(), vres.end());
-    for (size_t i = 0; i < v2.size(); i++)
-        std::cout << "["<< v2[i] << "] ";
-    std::cout << "\n";
     std::cout << "insert: size: " << v2.size() << " capacity: " << v2.capacity() << std::endl;
+    v2.insert(v2.end() - 8, 5, 44);
+    std::cout << "insert(fill): value: " << v2[24] <<
+    " size: " << v2.size() << " capacity: " << v2.capacity() << std::endl;
+    // for (int i = 0; i < int(v2.size()); i++)
+    //     std::cout << "index = " << i << " value = " << v2[i] << std::endl;
+    v2.clear();
+    v2.assign(1000, 1);
+    v2.insert(v2.end() - 50, 4200, 2);
+    std::cout << "insert(fill): size = " << v2.size() << "; capacity = " << v2.capacity() << std::endl;
+    v2.insert(v2.end() - 50, 8);
+    std::cout << "insert(value): size = " << v2.size() << "; capacity = " << v2.capacity() << std::endl;
+
+    std::cout << GREEN << "erase()"<< STOP << std::endl;
+    std::cout << "value before erase = " << v2[v2.size() - 50]<< "; size = " << v2.size() << std::endl;
+    v2.erase(v2.end() - 50);
+    std::cout << "value after erase = " << v2[v2.size() - 50]<< "; size = " << v2.size() << std::endl;
+    // for (int i = 0; i < int(v2.size()); i++)
+    //     std::cout << "[" << v2[i] << "]";
+    // std::cout << "\n";
     //std::cout<< "assign(range) compare: " << (vas == vass) << std::endl;
     // std::cout<< "resize/reverse compare: " << (vre == vres) << std::endl;
 }
