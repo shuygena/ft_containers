@@ -76,14 +76,7 @@ namespace ft {
             return *this;
         }
 
-        //Copy constructor. Constructs the container with the copy of the contents of other.         
-        // vector(const vector<T,Allocator>& x): _arr(0), _cap(x._cap), _sz(x._sz), _all(Allocator()){ 
-        //     _arr = _all.allocate(x.capacity());
-        //     for (size_t i = 0; i < x.size(); i++)
-        //         _arr[i] = x._arr[i];
-        // }
-
-        // Copy constructor for tests
+        // Copy constructor
         vector(const vector& x): _arr(0), _cap(x._cap), _sz(x._sz), _all(x.get_allocator()){ 
             _arr = _all.allocate(x.capacity());
             for (size_t i = 0; i < x.size(); i++)
@@ -127,8 +120,6 @@ namespace ft {
             if (n > _cap){
                 _all.deallocate(_arr, _cap);
                 _cap = n;
-                // while (_cap < n)
-                //     _cap = (2 * _cap) + (_cap == 0); //assign fix
                 _arr = _all.allocate(_cap);  
             }
             for (size_t i = 0; i < n; i++)
@@ -196,7 +187,7 @@ namespace ft {
             }
         }
 
-        void resize(size_t sz, T c = T()){ //what if (_cap < sz) ?
+        void resize(size_t sz, T c = T()){
             if (sz < _sz){
                 for (size_t i = sz; i < _sz; i++)
                 _all.destroy(_arr + i);
@@ -275,7 +266,6 @@ namespace ft {
             if (_cap <= _sz)
                 reserve(_cap * 2 + (_cap == 0));
             _arr[_sz] = x;
-            // _all.construct(_arr + _sz, x);
             _sz++;
         }
 
@@ -284,29 +274,39 @@ namespace ft {
             _all.destroy(_arr + _sz);
         }
 
-        iterator insert(iterator position, const T& x){ //Ok
+        iterator insert(iterator position, const T& x){
             insert(position, 1, x);
             return ++position;
         }
 
-        void insert(iterator position, size_t n, const T& x) //OK
+        void insert(iterator position, size_t n, const T& x)
         {
             size_t i = 0;
             size_t j = 0;
             size_t distance = static_cast<size_t>(position - begin());
-            pointer arr = _all.allocate(n + _sz);
-            while (i++ < distance)
+            size_t cap = _cap + (_cap == 0);
+            while (cap < _sz + n)
+                cap *= 2;
+            pointer arr = _all.allocate(cap);
+            for (; i < distance; i++){
+            // while (i++ < distance)
                 arr[i] = *(_arr + i);
-            while (j++ < n)
-                arr[i - 1 + j] = x;
-            while (i++ < _sz)
+                // std::cout << "index = " << i << " value = " << *(_arr + i) << std::endl;
+                }
+            for ( ; j < n; j++){
+                // std::cout << "index = " << i + j<< " value = " << x << std::endl;
+                arr[i + j] = x;}
+            for (; i < _sz; i++){
+            // while (i++ < _sz)
                 arr[i + j] = *(_arr + i);
+                // std::cout << "index = " << i + j << " value = " << *(_arr + i) << std::endl;
+            }
             for (i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
             if (_cap)
                 _all.deallocate(_arr, _cap);
             _arr = arr;
-            _cap = n + _sz;
+            _cap = cap;
             _sz += n;
         }
 
@@ -315,82 +315,21 @@ namespace ft {
             typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0){
                 if (position < begin() || position >= end() || first > last)
                     throw std::logic_error("vector");
-                size_t start = std::distance(position, begin());
-                size_t counter = std::distance(first, last) - 1;
-                // _sz += counter;
+                size_t start = std::distance(begin(), position);
+                size_t counter = std::distance(first, last);
                 if (_sz + counter > _cap)
                 {
                     size_t cap = _cap * 2 + (_cap == 0);
                     while (cap < _sz + counter)
                         cap *= 2;
                     reserve(cap);
-                    // pointer arr = _all.allocate(cap);
-                    // size_t i = 0;
-                    // size_t j = 0;
-                    // for (; i < start; i++)
-                    //     arr[i] = *(_arr + i);
-                    // // while (i < start)
-                    // for (; j < counter; j++)
-                    //     arr[i + j] = *(first++);
-                    // // while (j++ < counter)
-                    // //     arr[i - 1 + j] = *(first++);
-                    // for (; i < _sz; i++)
-                    //     arr[i + j + 1] = *(_arr + i);
-                    // // while (i++ < _sz)
-                    // //     arr[i + j] = *(_arr + i);
-                    // for (i = 0; i < _sz; i++)
-                    //     _all.destroy(_arr + i);
-                    // if (_cap)
-                    //      _all.deallocate(_arr, _cap);
-                    // _arr = arr;
-                    // _cap = cap;
                 }
-                // else{
-                    // std::cout << "size begore " << _sz << std::endl;
-                    // for (size_t i = _sz; i > static_cast<size_t>(start); i--){
-                    //     _all.destroy(_arr + i + counter - 1);
-                    //     _arr[i + counter - 1] = *(_arr + i - 1);
-                    // }
-                    // for (size_t i = 0; i < static_cast<size_t>(counter); i++){
-                    //     _all.destroy(_arr + i + counter);
-                    //     _arr[start + i] = *(first++);
-                    // }
-                for (size_t i = _sz + counter; i > start + counter; i--){
-                    // _all.destroy(_arr + i + counter - 1);
+                for (size_t i = _sz + counter; i > start + counter; i--)
                     _arr[i - 1] = *(_arr + i - counter - 1);
-                }
-                for (size_t i = start; i < counter; i++){
-                    _all.destroy(_arr + i );
-                    _arr[i] = *(first);
-                    first++;
-                }
+                for (int i = int(start + counter); i > int(start); i--)
+                    _arr[i - 1] = *(--last);
                 _sz += counter;
-
-                    // std::cout << "size after " << _sz << std::endl;
-                // }
             }
-        /*template <class InputIterator>
-            void insert(iterator position, InputIterator first, InputIterator last,
-            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0){
-                if (position < begin() || position >= end() || first > last)
-                    throw std::logic_error("vector");
-                size_t start = position - begin();
-                size_t n = std::distance(first, last) - 1;
-                if (_sz + n > _cap)
-                {
-                    size_t cap = _cap * 2 + (_cap == 0);
-                    while (cap < _sz + n)
-                        cap *= 2;
-                    reserve(cap);
-                }
-                for (size_t i = 0; i < n; i++) //comment it
-                    _arr[_sz + i] = *first;
-                for (size_t i = _sz - 1; i >= 0 && i >= start; i--)
-                    _arr[i + n] = *(_arr + i);
-                for (size_t i = start; i < start + n; i++)
-                    _arr[i] = *(first++);
-                _sz += n;
-            }*/
 
         iterator erase(iterator position){
             return erase(position, position + 1);
