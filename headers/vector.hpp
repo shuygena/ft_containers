@@ -275,8 +275,9 @@ namespace ft {
         }
 
         iterator insert(iterator position, const T& x){
+            size_t distance = std::distance(begin(), position);
             insert(position, 1, x);
-            return ++position;
+            return iterator(_arr + distance);
         }
 
         void insert(iterator position, size_t n, const T& x)
@@ -284,29 +285,27 @@ namespace ft {
             size_t i = 0;
             size_t j = 0;
             size_t distance = static_cast<size_t>(position - begin());
-            size_t cap = _cap + (_cap == 0);
-            while (cap < _sz + n)
-                cap *= 2;
-            pointer arr = _all.allocate(cap);
-            for (; i < distance; i++){
-            // while (i++ < distance)
-                arr[i] = *(_arr + i);
-                // std::cout << "index = " << i << " value = " << *(_arr + i) << std::endl;
-                }
-            for ( ; j < n; j++){
-                // std::cout << "index = " << i + j<< " value = " << x << std::endl;
-                arr[i + j] = x;}
-            for (; i < _sz; i++){
-            // while (i++ < _sz)
-                arr[i + j] = *(_arr + i);
-                // std::cout << "index = " << i + j << " value = " << *(_arr + i) << std::endl;
+            if (n >= _cap)
+                _cap += n;
+            else
+            {
+                size_t cap = _cap + (_cap == 0);
+                while (cap < _sz + n)
+                    cap *= 2;
+                _cap = cap;
             }
+            pointer arr = _all.allocate(_cap);
+            for (; i < distance; i++)
+                arr[i] = *(_arr + i);
+            for ( ; j < n; j++)
+                arr[i + j] = x;
+            for (; i < _sz; i++)
+                arr[i + j] = *(_arr + i);
             for (i = 0; i < _sz; i++)
                 _all.destroy(_arr + i);
             if (_cap)
                 _all.deallocate(_arr, _cap);
             _arr = arr;
-            _cap = cap;
             _sz += n;
         }
 
