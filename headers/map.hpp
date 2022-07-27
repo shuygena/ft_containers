@@ -4,19 +4,19 @@
 #include <iostream>
 #include "iterator.hpp"
 //iterator
-//tree
+#include "rb_tree.hpp"
 #include "reverse_iterator.hpp"
 #include "utils.hpp"
 
 namespace ft {
     template <class Key, class T, class Compare = std::less<Key>,
-    class Allocator = std::allocator<std::pair<const Key, T> > > //pair -> ft
+    class Allocator = std::allocator<ft::pair<const Key, T> > >
     class map {
     public:
     // types:
         typedef Key key_type;
         typedef T mapped_type;
-        typedef std::pair<const Key, T> value_type; //ft
+        typedef ft::pair<const Key, T> value_type; //ft
         typedef Compare key_compare;
         typedef Allocator allocator_type;
         typedef typename Allocator::reference reference;
