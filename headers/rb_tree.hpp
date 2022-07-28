@@ -8,30 +8,30 @@
 
 namespace ft
 {
-    template <class T>
+    template <class value_type>
         struct node{
-            T key_value;
+            value_type key_value;
             bool color;
-            struct node<T> *left;
-            struct node<T> *right;
-            struct node<T> *parent;
+            struct node *left; // <value_type>
+            struct node *right; // <value_type>
+            struct node *parent; // <value_type>
             bool nil;
 
-            node(): key_value(T()), color(BLACK),
-                parent(0), right(this), left(this), nil(1){}
-            node(const T& key_value): key_value(new T(key_value)), 
-                color(BLACK), parent(0), right(this), left(this), nil(0){}
-            ~node() { delete key_value;}
+            node(): key_value(value_type()), color(BLACK),
+                left(this), right(this), parent(0), nil(1){}
+            node(const value_type& key_value): key_value(value_type(key_value)), 
+                color(BLACK), left(this), right(this), parent(0), nil(0){}
+            ~node() {}
     };
 
-    template <class T>
+    template <class value_type>
         class tree{
-            node <T> current;
-            node <T> *root;
+            node <value_type> current;
+            node <value_type> *root;
             size_t tsize;
             
         public:
-            tree(){
+            tree<value_type>(){
                 tsize = 0;
                 root = &current;
                 current.color = BLACK;
@@ -40,18 +40,25 @@ namespace ft
                 current.left = &current;
                 current.right = &current;
                 }
-            // tree(tree<T> &x){
-            //     tsize = 0;
-            //     root = &current;
-            //     current.color = BLACK;
-            //     current.nil = true;
-            //     current.parent = 0;
-            //     current.left = &current;
-            //     current.right = &current;
+                
+            tree(tree <value_type> &x){ // tree<value_type> 
+                tsize = 0;
+                root = current;
+                current.color = BLACK;
+                current.nil = (x == x);
+                current.parent = 0;
+                current.left = current;
+                current.right = current;
+                }
+            // tree& operator=(const tree<value_type> &x){ //  
+            //     if (this != x){
+            //         if (x->left->nil != )
+            //         }
+            //         return *this;
             //     }
 
-            void left_rotate(node <T> *x){
-                node <T> *y = x->right;
+            void left_rotate(node <value_type> *x){
+                node <value_type> *y = x->right;
                 x->right = y->left;
 
                 if (y->nil == false)
@@ -63,8 +70,8 @@ namespace ft
                 x->parent = y;
             }
 
-            void right_rotate(node <T> *x){
-                node <T> *y = x->left;
+            void right_rotate(node <value_type> *x){
+                node <value_type> *y = x->left;
                 x->left = y->right;
 
                 if (y->nil == false)
@@ -76,9 +83,9 @@ namespace ft
                 x->parent = y;                
             }
 
-            void insert(node <T> *z){
-                node <T> *y = node<T>();
-                node <T> *x = root;
+            void insert(node <value_type> *z){
+                node <value_type> *y = node<value_type>();
+                node <value_type> *x = root;
                 while (x->nil == false)
                 {
                     y = x;
@@ -97,12 +104,13 @@ namespace ft
                 z->left->nil = true;
                 z->right->nil = true;
                 z->color =  RED;
+                tsize++;
                 insert_fixup(z);
             }
 
-            void insert_fixup(node <T> *z)
+            void insert_fixup(node <value_type> *z)
             {
-                node <T> *y;
+                node <value_type> *y;
 
                 while (z->parent->color == RED)
                     if (z->parent == z->parent->parent->left){
@@ -144,7 +152,7 @@ namespace ft
                 root->color = BLACK;   
             }
 
-            void transplant(node <T> *u, node <T> *v){ //delete 1 element
+            void transplant(node <value_type> *u, node <value_type> *v){ //delete 1 element
                 if (u->parent->nil == true)
                     root = v;
                 else if (u == u->parent->left)
@@ -154,9 +162,9 @@ namespace ft
                 v->parent = u->parent;
             }
 
-            void rb_delete(node <T> *z){
-                node <T> *y = z;
-                node <T> *x;
+            void rb_delete(node <value_type> *z){
+                node <value_type> *y = z;
+                node <value_type> *x;
                 bool y_color = y->color;
                 if (z->left->nil == true){
                     x = z->right;
@@ -180,12 +188,13 @@ namespace ft
                     y->left->parent = y;
                     y->color = z->color;
                 }
+                tsize--;
                 if (y_color == BLACK)
                     delete_fixup(x);
             }
 
-            void delete_fixup(node <T> *x){
-                node <T> *w;
+            void delete_fixup(node <value_type> *x){
+                node <value_type> *w;
                 while (x != root && x->color == BLACK){
                     if (x == x->parent->left){
                         w = x->parent->right;
@@ -239,6 +248,10 @@ namespace ft
                     }
                 }
                 x->color = BLACK;
+            }
+
+            void size(){
+                return tsize;
             }
 
         };
