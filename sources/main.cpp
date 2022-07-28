@@ -5,6 +5,7 @@
 #include <vector>
 #include <stack>
 #include <deque>
+#include <map.hpp>
 
 #define STOP   "\033[0m"
 #define GREEN   "\033[32m"     
@@ -201,9 +202,17 @@ void test_vector(void)
     // std::cout<< "resize/reverse compare: " << (vre == vres) << std::endl;
 }
 
+void test_map(void)
+{
+    std::cout << "=======================================\n";
+    std::cout << "\t\tFT MAP\n";
+    std::cout << "=======================================\n";
+
+    ft::map<int, int> m1;
+}
+
 int main(){
-    
     test_stack();
     test_vector();
-    
+    test_map();
 }
