@@ -9,7 +9,7 @@
 #include "utils.hpp"
 
 namespace ft {
-    template <class Key, class T, class Compare = std::less<Key>,
+template <class Key, class T, class Compare = std::less<Key>,
     class Allocator = std::allocator<ft::pair<const Key, T> > >
     class map {
     public:
@@ -27,6 +27,8 @@ namespace ft {
         typedef typename Allocator::difference_type difference_type;// See 23.1
         typedef typename Allocator::pointer pointer;
         typedef typename Allocator::const_pointer const_pointer;
+        typedef typename Allocator::template rebind< node <T> >::other  allocator_node;
+        typedef typename Allocator::template rebind< tree <T> >::other  allocator_tree;
         // typedef ft::reverse_iterator<iterator> reverse_iterator;
         // typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
         
@@ -40,18 +42,46 @@ namespace ft {
                 return comp(x.first, y.first);
                 }
             };
+        
+    private:
+        Allocator                       _all;
+        allocator_tree                  _all_tree;
+        allocator_node                  _all_node;
+        Compare                         _cmp;
+        tree<value_type>   _tree;           
+        
+    public:
 // ? ***************************************************************************
 // ? *                       construct/copy/destroy:                           *
 // ? ***************************************************************************
         explicit map(const Compare& comp = Compare(),
-        const Allocator& = Allocator());
+        const Allocator& alloc= Allocator()):
+        // :
+         _all(alloc), _cmp(comp)//, _tree(tree<value_type>())
+        {
+                // _tree = _all_tree.allocate(sizeof(tree<value_type>));
+                // _all_tree.construct(_tree);
+        }
         // template <class InputIterator>
         // map(InputIterator first, InputIterator last,
         // const Compare& comp = Compare(), const Allocator& = Allocator());
-        map(const map<Key,T,Compare,Allocator>& x);
-        ~map();
+        // map(const map<Key,T,Compare,Allocator>& x): _all(x._all), _cmp(x._cmp){
+        //     _tree = _all_tree.allocate(sizeof(tree<value_type>));
+        //     _all_tree.construct(_tree, *x._tree);
+        // } //после итератора перегрузить равно для дерева
+
+        ~map(){}
+
         map<Key,T,Compare,Allocator>&
-        operator=(const map<Key,T,Compare,Allocator>& x);
+        operator=(const map<Key,T,Compare,Allocator>& x){
+        if (this != &x){
+        //     _tree.clear();
+            _cmp = x._cmp;
+            _all = x._all;
+        //     _tree = x._tree;
+            }
+        return *this;    
+        }
 // ? ***************************************************************************
 // ? *                       iterators:                                        *
 // ? ***************************************************************************
@@ -66,13 +96,21 @@ namespace ft {
 // ? ***************************************************************************
 // ? *                       capacity:                                         *
 // ? ***************************************************************************
-        bool empty() const;
-        size_type size() const;
-        size_type max_size() const;
+        bool empty() const{
+            return size() == 0;
+        }
+        size_type size() const{
+            return _tree->size();
+        }
+        size_type max_size() const{
+                return _all_node.max_size();
+        }
 // ? ***************************************************************************
 // ? *                       element access:                                   *
 // ? ***************************************************************************
-        T& operator[](const key_type& x);
+        // T& operator[](const key_type& x){
+
+        // }
 // ? ***************************************************************************
 // ? *                       modifiers:                                        *
 // ? ***************************************************************************
