@@ -35,29 +35,29 @@ namespace ft
         //     typedef typename ft::node_iterator<const value_type> const_iterator;
 
         private:
-            node <value_type> current;
+            node <value_type> const_nil;
             node <value_type> *root;
             size_t tsize;
             
         public:
             tree<value_type>(){
                 tsize = 0;
-                root = &current;
-                current.color = BLACK;
-                current.nil = true;
-                current.parent = 0;
-                current.left = &current;
-                current.right = &current;
+                root = &const_nil;
+                const_nil.color = BLACK;
+                const_nil.nil = true;
+                const_nil.parent = 0;
+                const_nil.left = &const_nil;
+                const_nil.right = &const_nil;
                 }
                 
             tree(tree <value_type> &x){ // tree<value_type> 
                 tsize = 0;
-                root = current;
-                current.color = BLACK;
-                current.nil = (x == x);
-                current.parent = 0;
-                current.left = current;
-                current.right = current;
+                root = const_nil;
+                const_nil.color = BLACK;
+                const_nil.nil = (x == x);
+                const_nil.parent = 0;
+                const_nil.left = const_nil;
+                const_nil.right = const_nil;
                 }
             // tree& operator=(const tree<value_type> &x){ //  
             //     if (this != x){
@@ -109,7 +109,9 @@ namespace ft
             }
 
             void insert(node <value_type> *z){
-                node <value_type> *y = node<value_type>();
+                // node<value_type> w;
+                // node<value_type> il;
+                node <value_type> *y = &const_nil; // = &(node<value_type>());
                 node <value_type> *x = root;
                 while (x->nil == false)
                 {
@@ -126,9 +128,9 @@ namespace ft
                     y->left = z;
                 else
                     y->right = z;
-                z->left->nil = true;
-                z->right->nil = true;
-                z->color =  RED;
+                z->left = &const_nil;
+                z->right = &const_nil;
+                z->color = RED;
                 tsize++;
                 insert_fixup(z);
             }
@@ -137,7 +139,8 @@ namespace ft
             {
                 node <value_type> *y;
 
-                while (z->parent->color == RED)
+                while (z->parent->color == RED){
+                    std::cout << "here" << std::endl;
                     if (z->parent == z->parent->parent->left){
                         y = z->parent->parent->right;
                         if (y->color == RED){
@@ -145,17 +148,17 @@ namespace ft
                             y->color = BLACK;
                             z->parent->parent->color = RED;
                             z = z->parent->parent;
-                            }
+                        }
                         else {
                             if (z == z->parent->right){
                                 z = z->parent;
                                 left_rotate(z);
-                                }
+                            }
                             z->parent->color = BLACK;
                             z->parent->parent->color = RED;
                             right_rotate(z->parent->parent);
-                            }   
-                        }
+                        }   
+                    }
                     else{
                         y = z->parent->parent->left;
                         if (y->color == RED){
@@ -163,17 +166,18 @@ namespace ft
                             y->color = BLACK;
                             z->parent->parent->color = RED;
                             z = z->parent->parent;
-                            }
+                        }
                         else {
                             if (z == z->parent->left){
                                 z = z->parent;
                                 right_rotate(z);
-                                }
+                            }
                             z->parent->color = BLACK;
                             z->parent->parent->color = RED;
                             left_rotate(z->parent->parent);
-                            }
+                        }
                     }
+                }
                 root->color = BLACK;   
             }
 
@@ -281,18 +285,32 @@ namespace ft
 
 				std::cout << (isLeft ? "├──" : "└──" );
 				
+                
 				if (nodeV->nil){
 					std::cout <<"\033[0;36m"<< "nil" << "\033[0m"<<std::endl;
 					return ;
 				}
+                
 				// print the value of the node
 				if (nodeV->color == 0)
-					std::cout <<"\033[0;36m"<< nodeV->key_value<<"\033[0m"<<std::endl;
+					std::cout <<"\033[0;36m"<< nodeV->key_value.first <<"\033[0m"<<std::endl;
 				else
-					std::cout <<"\033[0;31m"<< nodeV->key_value << "\033[0m"<<std::endl;
+					std::cout <<"\033[0;31m"<< nodeV->key_value.first << "\033[0m"<<std::endl;
 				printBT( prefix + (isLeft ? "│   " : "    "), nodeV->left, true);
 				printBT( prefix + (isLeft ? "│   " : "    "), nodeV->right, false);		
 		}
+
+        void printTree(){
+			printBT("" , root, false);
+		}
+
+        void test()
+        {
+            std::cout << root->key_value.first << " = " <<  root->key_value.second << std::endl;
+            std::cout << root->left->nil << std::endl;
+            std::cout << root->right->nil << std::endl;
+            std::cout << root->nil << std::endl;
+        }
 
         void size(){
             return tsize;
