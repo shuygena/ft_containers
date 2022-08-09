@@ -1,6 +1,7 @@
 #include "stack.hpp"
 #include "vector.hpp"
 #include "map.hpp"
+#include "rb_tree.hpp"
 #include <iostream>
 #include <vector>
 #include <stack>
@@ -208,7 +209,10 @@ void test_map(void)
     std::cout << "\t\tFT MAP\n";
     std::cout << "=======================================\n";
 
-    ft::map<int, int> m1;
+    ft::pair<int, std::string> vk(1, "one");
+    std::cout << vk.first << " = " << vk.second << "\n";
+    
+    //ft::map<int, int> m1;
 }
 
 int main(){
