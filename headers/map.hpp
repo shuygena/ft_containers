@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "iterator.hpp"
-//iterator
+#include "node_iterator.hpp"
 #include "rb_tree.hpp"
 #include "reverse_iterator.hpp"
 #include "utils.hpp"
@@ -21,16 +21,16 @@ template <class Key, class T, class Compare = std::less<Key>,
         typedef Allocator allocator_type;
         typedef typename Allocator::reference reference;
         typedef typename Allocator::const_reference const_reference;
-        // typedef implementation defined iterator; // See 23.1
-        // typedef implementation defined const_iterator; // See 23.1
-        typedef typename Allocator::size_type size_type; // See 23.1
-        typedef typename Allocator::difference_type difference_type;// See 23.1
+        typedef ft::node_iterator<value_type> iterator;
+        typedef ft::node_iterator<const value_type> const_iterator;
+        typedef typename Allocator::size_type size_type;
+        typedef typename Allocator::difference_type difference_type;
         typedef typename Allocator::pointer pointer;
         typedef typename Allocator::const_pointer const_pointer;
         typedef typename Allocator::template rebind< node <T> >::other  allocator_node;
         typedef typename Allocator::template rebind< tree <T> >::other  allocator_tree;
-        // typedef ft::reverse_iterator<iterator> reverse_iterator;
-        // typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef ft::reverse_iterator<iterator> reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
         
         class value_compare: public std::binary_function<value_type,value_type,bool> {
             friend class map;
@@ -48,7 +48,7 @@ template <class Key, class T, class Compare = std::less<Key>,
         allocator_tree                  _all_tree;
         allocator_node                  _all_node;
         Compare                         _cmp;
-        tree<value_type>   _tree;           
+        tree<value_type>                _tree;           
         
     public:
 // ? ***************************************************************************
@@ -57,10 +57,12 @@ template <class Key, class T, class Compare = std::less<Key>,
         explicit map(const Compare& comp = Compare(),
         const Allocator& alloc= Allocator()):
         // :
-         _all(alloc), _cmp(comp)//, _tree(tree<value_type>())
+         _all(alloc), _cmp(comp) //_tree(tree<value_type>())
         {
-                // _tree = _all_tree.allocate(sizeof(tree<value_type>));
-                // _all_tree.construct(_tree);
+            //_tree = tree<value_type>();
+            //_tree = tree<value_type>;
+                _tree = _all_tree.allocate(sizeof(tree<value_type>));
+                //_all_tree.construct(_tree);
         }
         // template <class InputIterator>
         // map(InputIterator first, InputIterator last,
