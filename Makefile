@@ -2,7 +2,7 @@ NAME = container
 
 SRCS =	main.cpp
 INCLUDES =	stack.hpp vector.hpp iterator.hpp random_access_iterator.hpp reverse_iterator.hpp \
-			utils.hpp map.hpp rb_tree.hpp
+			utils.hpp map.hpp rb_tree.hpp node_iterator.hpp
 
 OBJDIR := objs
 
