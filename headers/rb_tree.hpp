@@ -1,10 +1,14 @@
-#ifndef RB_TREE
-#define RB_TREE
+#ifndef RB_TREE_HPP
+#define RB_TREE_HPP
 
 #define BLACK 0
 #define RED 1
 
 #include <iostream>
+#include "iterator.hpp"
+#include "node_iterator.hpp"
+#include "utils.hpp"
+
 
 namespace ft
 {
@@ -26,6 +30,11 @@ namespace ft
 
     template <class value_type>
         class tree{
+        // public:
+        //     typedef typename ft::node_iterator<value_type> iterator;
+        //     typedef typename ft::node_iterator<const value_type> const_iterator;
+
+        private:
             node <value_type> current;
             node <value_type> *root;
             size_t tsize;
@@ -56,6 +65,22 @@ namespace ft
             //         }
             //         return *this;
             //     }
+
+            // tree& operator=(tree<value_type> &x){
+            //     if (this != &x)
+            //     {
+            //         //clear it
+            //         iterator first = iterator(x.begin());
+            //         iterator last = (iterator(x.end()))++;
+            //         while (first != last)
+            //         {
+            //             insert(*first);
+            //             first++;
+            //         }
+            //         return *this;
+            //     }
+            // }
+            
 
             void left_rotate(node <value_type> *x){
                 node <value_type> *y = x->right;
@@ -250,10 +275,42 @@ namespace ft
                 x->color = BLACK;
             }
 
-            void size(){
-                return tsize;
-            }
+        void printBT(const std::string& prefix, const node<value_type>* nodeV, bool isLeft) const
+		{
+				std::cout << prefix;
 
+				std::cout << (isLeft ? "├──" : "└──" );
+				
+				if (nodeV->nil){
+					std::cout <<"\033[0;36m"<< "nil" << "\033[0m"<<std::endl;
+					return ;
+				}
+				// print the value of the node
+				if (nodeV->color == 0)
+					std::cout <<"\033[0;36m"<< nodeV->key_value<<"\033[0m"<<std::endl;
+				else
+					std::cout <<"\033[0;31m"<< nodeV->key_value << "\033[0m"<<std::endl;
+				printBT( prefix + (isLeft ? "│   " : "    "), nodeV->left, true);
+				printBT( prefix + (isLeft ? "│   " : "    "), nodeV->right, false);		
+		}
+
+        void size(){
+            return tsize;
+        }
+
+        node<value_type> *begin(){
+            node <value_type> tmp = root;
+            while (tmp->left->nil == 0)
+                tmp = tmp->left;
+            return tmp;
+        }
+
+        node<value_type> *end(){
+            node <value_type> tmp = root;
+            while (tmp->right->nil == 0)
+                tmp = tmp->right;
+            return tmp;
+        }
         };
 }
 
