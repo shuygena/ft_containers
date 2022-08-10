@@ -57,12 +57,13 @@ template <class Key, class T, class Compare = std::less<Key>,
         explicit map(const Compare& comp = Compare(),
         const Allocator& alloc= Allocator()):
         // :
-         _all(alloc), _cmp(comp) //_tree(tree<value_type>())
+         _all(alloc), _cmp(comp)//, _tree(tree<value_type>())
         {
-            //_tree = tree<value_type>();
+            _tree.printTree();
+            // _tree = tree<value_type>();
             //_tree = tree<value_type>;
-                _tree = _all_tree.allocate(sizeof(tree<value_type>));
-                //_all_tree.construct(_tree);
+            // _tree = _all_tree.allocate(sizeof(tree<value_type>));
+            // _all_tree.construct(_tree);
         }
         // template <class InputIterator>
         // map(InputIterator first, InputIterator last,
