@@ -50,7 +50,7 @@ namespace ft
                 const_nil.right = &const_nil;
                 }
                 
-            tree(tree <value_type> &x){ // tree<value_type> 
+            tree(tree<value_type> &x){ // tree<value_type> 
                 tsize = 0;
                 root = const_nil;
                 const_nil.color = BLACK;
@@ -59,12 +59,15 @@ namespace ft
                 const_nil.left = const_nil;
                 const_nil.right = const_nil;
                 }
-            // tree& operator=(const tree<value_type> &x){ //  
-            //     if (this != x){
-            //         if (x->left->nil != )
-            //         }
-            //         return *this;
-            //     }
+
+            tree& operator=(const tree<value_type> &x){ //  
+                if (this != &x){
+                    root = x.root;
+                    const_nil = x.const_nil;
+                    tsize = x.tsize;
+                    }
+                    return *this;
+                }
 
             // tree& operator=(tree<value_type> &x){
             //     if (this != &x)
@@ -86,12 +89,16 @@ namespace ft
                 node <value_type> *y = x->right;
                 x->right = y->left;
 
-                if (y->nil == false)
+                if (y->left->nil == false)
+                    y->left->parent = x;
+                y->parent = x->parent;
+                if (x->parent->nil)
                     root = y;
                 else if (x == x->parent->left)
                     x->parent->left = y;
                 else
-                    y->left = x;
+                    x->parent->right = y;
+                y->left = x;
                 x->parent = y;
             }
 
@@ -99,13 +106,17 @@ namespace ft
                 node <value_type> *y = x->left;
                 x->left = y->right;
 
-                if (y->nil == false)
+                if (y->right->nil == false)
+                    y->right->parent = x;
+                y->parent = x->parent;
+                if (x->parent->nil)
                     root = y;
                 else if (x == x->parent->right)
                     x->parent->right = y;
                 else
-                    y->right = x;
-                x->parent = y;                
+                    x->parent->left = y;
+                y->right = x;
+                x->parent = y;          
             }
 
             void insert(node <value_type> *z){
@@ -140,8 +151,9 @@ namespace ft
                 node <value_type> *y;
 
                 while (z->parent->color == RED){
-                    std::cout << "here" << std::endl;
+                    // std::cout << "here" << std::endl;
                     if (z->parent == z->parent->parent->left){
+                        // std::cout << "Here 1" << std::endl;
                         y = z->parent->parent->right;
                         if (y->color == RED){
                             z->parent->color = BLACK;
@@ -153,10 +165,12 @@ namespace ft
                             if (z == z->parent->right){
                                 z = z->parent;
                                 left_rotate(z);
+                                // std::cout << "left_rotate" << std::endl;
                             }
                             z->parent->color = BLACK;
                             z->parent->parent->color = RED;
                             right_rotate(z->parent->parent);
+                            // std::cout << "right_rotate" << std::endl;
                         }   
                     }
                     else{
@@ -308,7 +322,11 @@ namespace ft
         {
             std::cout << root->key_value.first << " = " <<  root->key_value.second << std::endl;
             std::cout << root->left->nil << std::endl;
+            if (root->left->nil == 0)
+                std::cout << "left node: " << root->left->key_value.first << std::endl;
             std::cout << root->right->nil << std::endl;
+            if (root->right->nil == 0)
+                std::cout << "right node: " << root->right->key_value.first << std::endl;
             std::cout << root->nil << std::endl;
         }
 
