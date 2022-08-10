@@ -211,12 +211,30 @@ void test_map(void)
 
     ft::pair<int, std::string> vk(1, "one");
     std::cout << vk.first << " = " << vk.second << "\n";
-    
-    //ft::map<int, int> m1;
+
+
+    ft::tree< ft::pair<int, std::string> > t;
+    ft::node< ft::pair<int, std::string> > n(vk);
+    ft::pair<int, std::string> vk1(2, "two");
+    ft::node< ft::pair<int, std::string> > n1(vk1);
+    ft::pair<int, std::string> vk2(3, "three");
+    ft::node< ft::pair<int, std::string> > n2(vk2);
+    ft::pair<int, std::string> vk3(4, "four");
+    ft::node< ft::pair<int, std::string> > n3(vk3);
+    std::cout << "n is " << n.nil << std::endl;
+    t.insert(&n);
+    t.insert(&n1);
+    t.insert(&n2);
+    t.insert(&n3);
+    // t.test();
+    // t.printTree();
+    // t.rb_delete(&n2);
+    // t.printTree();
+    ft::map<int, int> m1;
 }
 
 int main(){
-    test_stack();
-    test_vector();
+    // test_stack();
+    // test_vector();
     test_map();
 }
