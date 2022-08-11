@@ -30,7 +30,10 @@ namespace ft
 
     template <class value_type>
         class tree{
-        // public:
+        public:
+        typedef typename value_type::first_type	    key_type;
+        typedef typename value_type::second_type    mapped_type;
+
         //     typedef typename ft::node_iterator<value_type> iterator;
         //     typedef typename ft::node_iterator<const value_type> const_iterator;
 
@@ -119,15 +122,16 @@ namespace ft
                 x->parent = y;          
             }
 
-            void insert(node <value_type> *z){
+            void insert(value_type &kv){
                 // node<value_type> w;
                 // node<value_type> il;
+                node <value_type> *z = new node<value_type>(kv);
                 node <value_type> *y = &const_nil; // = &(node<value_type>());
                 node <value_type> *x = root;
                 while (x->nil == false)
                 {
                     y = x;
-                    if (z->key_value < x->key_value)
+                    if (z->key_value.first < x->key_value.first)
                         x = x->left;
                     else
                         x = x->right;
@@ -135,7 +139,7 @@ namespace ft
                 z->parent = y;
                 if (y->nil)
                     root = z;
-                else if (z->key_value < y->key_value)
+                else if (z->key_value.first < y->key_value.first)
                     y->left = z;
                 else
                     y->right = z;
@@ -335,17 +339,33 @@ namespace ft
         }
 
         node<value_type> *begin(){
-            node <value_type> tmp = root;
+            node <value_type> *tmp = root;
             while (tmp->left->nil == 0)
                 tmp = tmp->left;
             return tmp;
         }
 
         node<value_type> *end(){
-            node <value_type> tmp = root;
+            node <value_type> *tmp = root;
             while (tmp->right->nil == 0)
                 tmp = tmp->right;
             return tmp;
+        }
+
+        node<value_type> *search(key_type z){
+                node <value_type> *y = &const_nil; // = &(node<value_type>());
+                node <value_type> *x = root;
+                while (x->nil == false)
+                {
+                    y = x;
+                    if (x->key_value.first == z)
+                        return x;
+                    if (z < x->key_value.first)
+                        x = x->left;
+                    else
+                        x = x->right;
+                }
+                return x;
         }
         };
 }
