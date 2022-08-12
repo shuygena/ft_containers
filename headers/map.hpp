@@ -59,7 +59,7 @@ template <class Key, class T, class Compare = std::less<Key>,
         // :
          _all(alloc), _cmp(comp)//, _tree(tree<value_type>())
         {
-            _tree.printTree();
+            //_tree.printTree();
             // _tree = tree<value_type>();
             //_tree = tree<value_type>;
             // _tree = _all_tree.allocate(sizeof(tree<value_type>));
@@ -69,8 +69,10 @@ template <class Key, class T, class Compare = std::less<Key>,
         // map(InputIterator first, InputIterator last,
         // const Compare& comp = Compare(), const Allocator& = Allocator());
         // map(const map<Key,T,Compare,Allocator>& x): _all(x._all), _cmp(x._cmp){
-        //     _tree = _all_tree.allocate(sizeof(tree<value_type>));
-        //     _all_tree.construct(_tree, *x._tree);
+        //     for (; first != last; first++)
+        //         insert(*first);
+            
+            
         // } //после итератора перегрузить равно для дерева
 
         ~map(){}
@@ -88,19 +90,36 @@ template <class Key, class T, class Compare = std::less<Key>,
 // ? ***************************************************************************
 // ? *                       iterators:                                        *
 // ? ***************************************************************************
-        // iterator begin();
-        // const_iterator begin() const;
-        // iterator end();
-        // const_iterator end() const;
-        // reverse_iterator rbegin();
-        // const_reverse_iterator rbegin() const;
-        // reverse_iterator rend();
-        // const_reverse_iterator rend() const;
+        iterator begin(){
+            return iterator(_tree.begin());
+        }
+
+        const_iterator begin() const{
+            return const_iterator(_tree.begin());
+        }
+        iterator end(){
+            return (iterator(_tree.end()))++;
+        }
+        const_iterator end() const{
+            return (const_iterator(_tree.end()))++;
+        }
+        reverse_iterator rbegin(){
+            return reverse_iterator(iterator(_tree.end()));
+        }
+        const_reverse_iterator rbegin() const{
+            return const_reverse_iterator(const_iterator(_tree.end()));
+        }
+        reverse_iterator rend(){
+            return reverse_iterator((iterator(_tree.end()))++);
+        }
+        const_reverse_iterator rend() const{
+            return const_reverse_iterator((const_iterator(_tree.end()))++);
+        }
 // ? ***************************************************************************
 // ? *                       capacity:                                         *
 // ? ***************************************************************************
         bool empty() const{
-            return size() == 0;
+            return (size() == 0);
         }
         size_type size() const{
             return _tree->size();
@@ -111,19 +130,48 @@ template <class Key, class T, class Compare = std::less<Key>,
 // ? ***************************************************************************
 // ? *                       element access:                                   *
 // ? ***************************************************************************
-        // T& operator[](const key_type& x){
-
-        // }
+        T& operator[](const key_type& x){
+            node<value_type> *tmp = _tree.search(x);
+            if (tmp->nil){
+                _tree.insert(ft::make_pair(x, mapped_type()));
+                tmp = _tree.search(x);
+            }
+            return tmp->key_value.second;
+                
+        }
 // ? ***************************************************************************
 // ? *                       modifiers:                                        *
 // ? ***************************************************************************
-        // pair<iterator, bool> insert(const value_type& x);
+        pair<iterator, bool> insert(const value_type& x){
+            node<value_type> *tmp = _tree.search(x.first);
+            bool not_finded = 0;
+            if (tmp->nil){
+                _tree.insert(x);
+                tmp = _tree.search(x.first);
+                not_finded = 1;
+            }
+            return pair<iterator, bool>(iterator(tmp), not_finded);
+            // return ft::make_pair( )  
+        }
         // iterator insert(iterator position, const value_type& x);
-        // template <class InputIterator>
-        // void insert(InputIterator first, InputIterator last);
-        // void erase(iterator position);
-        size_type erase(const key_type& x);
-        // void erase(iterator first, iterator last);
+        template <class InputIterator>
+        void insert(InputIterator first, InputIterator last){
+            for (; first != last; first++)
+                insert(ft::make_pair(first->first, first->second));
+        }
+        void erase(iterator position){
+            _tree.rb_delete(position.base());
+        }
+        size_type erase(const key_type& x){
+            node<value_type> *tmp = _tree.search(x);
+            if (tmp->nil == 0)
+                _tree.rb_delete(tmp);
+        }
+        void erase(iterator first, iterator last){
+            for (; first != last; first++)
+                _tree.rb_delete(first.base());
+        }
+        
         void swap(map<Key,T,Compare,Allocator>&);
         void clear();
 // ? ***************************************************************************
@@ -173,8 +221,7 @@ template <class Key, class T, class Compare = std::less<Key>,
 // ? ***************************************************************************
     template <class Key, class T, class Compare, class Allocator>
     void swap(map<Key,T,Compare,Allocator>& x,
-    
-    map<Key,T,Compare,Allocator>& y);
+            map<Key,T,Compare,Allocator>& y);
 }
 
 #endif
