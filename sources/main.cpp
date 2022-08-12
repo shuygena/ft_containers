@@ -6,7 +6,8 @@
 #include <vector>
 #include <stack>
 #include <deque>
-#include <map.hpp>
+#include <map>
+
 
 #define STOP   "\033[0m"
 #define GREEN   "\033[32m"     
@@ -208,7 +209,6 @@ void test_map(void)
     std::cout << "=======================================\n";
     std::cout << "\t\tFT MAP\n";
     std::cout << "=======================================\n";
-
     ft::pair<int, std::string> vk(1, "one");
     std::cout << vk.first << " = " << vk.second << "\n";
 
@@ -222,15 +222,64 @@ void test_map(void)
     ft::pair<int, std::string> vk3(4, "four");
     ft::node< ft::pair<int, std::string> > n3(vk3);
     std::cout << "n is " << n.nil << std::endl;
-    t.insert(&n);
-    t.insert(&n1);
-    t.insert(&n2);
-    t.insert(&n3);
+    t.insert(vk);
+    t.insert(vk1);
+    t.insert(vk2);
+    t.insert(vk3);
     // t.test();
-    // t.printTree();
+    t.printTree();
     // t.rb_delete(&n2);
     // t.printTree();
+
+    std::cout << GREEN << "insert(key_value), map[]" << STOP << std::endl;
     ft::map<int, int> m1;
+    ft::map<int, int> m2;
+    // ft::map<int, int>::iterator it1;
+    // it1->first = 4; //это не работает
+    std::cout << "insert(1, 1): "<< (m1.insert(ft::make_pair(1, 1))).second << std::endl;
+    std::cout << "insert(1, 1): "<< (m1.insert(ft::make_pair(1, 1))).second << std::endl;
+    std::cout << "insert(1, 2): "<< (m1.insert(ft::make_pair(1, 2))).second << std::endl;
+    std::cout << "m1[1] = " << m1[1] << std::endl;
+    std::cout << "insert(1, 3): "<< (m1.insert(ft::make_pair(1, 3))).second << std::endl;
+    std::cout << "insert(2, 4): "<< (m1.insert(ft::make_pair(2, 4))).second << std::endl;
+    std::cout << "mp[1] = " << m1[1] << std::endl;
+    std::cout << "mp[333] = " << m1[333] << std::endl;
+    std::cout << GREEN << "begin(), end()" << STOP << std::endl;
+    m2.insert(ft::make_pair(3, 9));
+    m2.insert(ft::make_pair(4, 16));
+    m2.insert(ft::make_pair(5, 25));
+    ft::map<int, int>::iterator first = m2.begin();
+    ft::map<int, int>::iterator end = m2.end();
+    // end--;
+    std::cout << "begin() first: " << first->first << "; second: " << first->second << std::endl;
+    std::cout << "end()-- first: " << end->first << "; second: " << end->second << std::endl;
+
+    std::cout << "=======================================\n";
+    std::cout << "\t\tSTD MAP\n";
+    std::cout << "=======================================\n";
+
+    std::cout << GREEN << "insert(key_value), map[]" << STOP << std::endl;
+    std::map<int, int> mp;
+    std::map<int, int> mp1;
+    // std::map<int, int>::iterator it;
+    // it->first = 4; //это не работает
+    std::cout << "insert(1, 1): "<< (mp.insert(std::make_pair(1, 1))).second << std::endl;
+    std::cout << "insert(1, 1): "<< (mp.insert(std::make_pair(1, 1))).second << std::endl;
+    std::cout << "insert(1, 2): "<< (mp.insert(std::make_pair(1, 2))).second << std::endl;
+    std::cout << "mp[1] = " << mp[1] << std::endl;
+    std::cout << "insert(1, 3): "<< (mp.insert(std::make_pair(1, 3))).second << std::endl;
+    std::cout << "insert(2, 4): "<< (mp.insert(std::make_pair(2, 4))).second << std::endl;
+    std::cout << "mp[1] = " << mp[1] << std::endl;
+    std::cout << "mp[333] = " << mp[333] << std::endl;
+    std::cout << GREEN << "begin(), end()" << STOP << std::endl;
+    mp1.insert(std::make_pair(3, 9));
+    mp1.insert(std::make_pair(4, 16));
+    mp1.insert(std::make_pair(5, 25));
+    std::map<int, int>::iterator first1 = mp1.begin();
+    std::map<int, int>::iterator end1 = mp1.end();
+    // end1--;
+    std::cout << "begin() first: " << first1->first << "; second: " << first1->second << std::endl;
+    std::cout << "end() first: " << end1->first << "; second: " << end1->second << std::endl;
 }
 
 int main(){
