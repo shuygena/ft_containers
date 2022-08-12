@@ -52,20 +52,21 @@ namespace ft{
                     current = parent;
                     parent = parent->parent;
                 }
-                if (parent->nill == 0)
+                if (parent->nil == 0)
                     current = parent;
             }
 
         }
     
     public:
-        node_iterator(T value = 0): current(value){}
+        node_iterator(node<T> *value = 0): current(value){}
 
         template<class U>
             node_iterator(const ft::node_iterator<U>& u):
                 current(u.base()){}
+        
 
-        virtual ~node_iterator(){}
+        ~node_iterator(){}
 
         pointer base() const{
             return current;
@@ -79,11 +80,12 @@ namespace ft{
         }
 
         reference operator*() const{
-        return *(current->kye_value); // correct pair type for key and value?
+        //return *(current->kye_value); // correct pair type for key and value?
+        return current->key_value;
         }
 
         pointer operator->() const{
-            return current->kye_value;
+            return &(current->key_value);
         }
     
         node_iterator& operator++(){
