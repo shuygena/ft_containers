@@ -122,7 +122,7 @@ namespace ft
                 x->parent = y;          
             }
 
-            void insert(value_type &kv){
+            void insert(const value_type &kv){
                 // node<value_type> w;
                 // node<value_type> il;
                 node <value_type> *z = new node<value_type>(kv);
@@ -200,6 +200,8 @@ namespace ft
             }
 
             void transplant(node <value_type> *u, node <value_type> *v){ //delete 1 element
+                // node <value_type> *z = u;
+                // delete() elem
                 if (u->parent->nil == true)
                     root = v;
                 else if (u == u->parent->left)
@@ -207,6 +209,7 @@ namespace ft
                 else
                     u->parent->right = v;
                 v->parent = u->parent;
+                delete u;
             }
 
             void rb_delete(node <value_type> *z){
