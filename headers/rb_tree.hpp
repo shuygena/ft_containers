@@ -196,7 +196,8 @@ namespace ft
                         }
                     }
                 }
-                root->color = BLACK;   
+                root->color = BLACK;
+                const_nil.parent = last();   
             }
 
             void transplant(node <value_type> *u, node <value_type> *v){ //delete 1 element
@@ -298,6 +299,7 @@ namespace ft
                     }
                 }
                 x->color = BLACK;
+                const_nil.parent = last(); 
             }
 
         void printBT(const std::string& prefix, const node<value_type>* nodeV, bool isLeft) const
@@ -337,7 +339,7 @@ namespace ft
             std::cout << root->nil << std::endl;
         }
 
-        void size(){
+        size_t size() const{
             return tsize;
         }
 
@@ -348,7 +350,7 @@ namespace ft
             return tmp;
         }
 
-        node<value_type> *end(){
+        node<value_type> *last(){
             node <value_type> *tmp = root;
             while (tmp->right->nil == 0)
                 tmp = tmp->right;
@@ -370,7 +372,15 @@ namespace ft
                 }
                 return x;
         }
+
+        node<value_type> *end(){
+            node <value_type> *tmp = root;
+            while (tmp->right->nil == 0)
+                tmp = tmp->right;
+            return tmp->right;
+        }
         };
 }
-
+//end()->last(), add end()
+//add const_nil.parent
 #endif
