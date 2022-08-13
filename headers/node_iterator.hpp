@@ -39,15 +39,22 @@ namespace ft{
         }
 
         void prev(){
-            if (current->nil)
+            std::cout<< "enterance" << std::endl;
+            if (current->nil){
+
+                std::cout<< "first condition" << std::endl;
+                if (current->parent == 0)
+                    std::cout << "null ponter lol, ur looser\n";
                 current = current->parent;
+                
+                }
             else if (current->left->nil == 0){
                 current = current->left;
                 while (current->right->nil)
                     current = current->right;
             }
             else {
-                node<T> *parent;
+                node<T> *parent = current->parent;
                 while (parent->nil == 0 && current == parent->left){
                     current = parent;
                     parent = parent->parent;
@@ -107,7 +114,18 @@ namespace ft{
             return tmp;
         }
 
+        bool operator!=(node_iterator const &x){
+            return (current != x.current);
+        }
+
     };
+        // template <class T> bool operator!=(
+        // const node_iterator<T>& x,
+        // const node_iterator<T>& y){
+        //     return &(*x) != &(*y);
+        // }
 
 }
+//add overload operator!=
+//fix prev()
 #endif
