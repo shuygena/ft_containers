@@ -244,15 +244,27 @@ void test_map(void)
     std::cout << "insert(2, 4): "<< (m1.insert(ft::make_pair(2, 4))).second << std::endl;
     std::cout << "mp[1] = " << m1[1] << std::endl;
     std::cout << "mp[333] = " << m1[333] << std::endl;
-    std::cout << GREEN << "begin(), end()" << STOP << std::endl;
+    
+    std::cout << GREEN << "empty(), size(), max_size()" << STOP << std::endl;
+    std::cout << "empty(): " << m1.empty() << std::endl;
+    std::cout << "size(): " << m1.size() << std::endl;
+    std::cout << "max_size(): " << m1.max_size() << std::endl;
+    
+    std::cout << GREEN << "begin(), end(), ++, --" << STOP << std::endl;
     m2.insert(ft::make_pair(3, 9));
     m2.insert(ft::make_pair(4, 16));
     m2.insert(ft::make_pair(5, 25));
     ft::map<int, int>::iterator first = m2.begin();
     ft::map<int, int>::iterator end = m2.end();
-    // end--;
-    std::cout << "begin() first: " << first->first << "; second: " << first->second << std::endl;
+    first++;
+    end--;
+    std::cout << "begin()++ first: " << first->first << "; second: " << first->second << std::endl;
     std::cout << "end()-- first: " << end->first << "; second: " << end->second << std::endl;
+
+    std::cout << GREEN << "insert(iter1, iter2)" << STOP << std::endl;
+    m1.insert(m2.begin(), m2.end());
+    for (ft::map<int, int>::iterator it1 = m1.begin(); it1 != m1.end(); it1++)
+        std::cout << "m1[" << it1->first<< "] = " << it1->second << std::endl;
 
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD MAP\n";
@@ -271,15 +283,29 @@ void test_map(void)
     std::cout << "insert(2, 4): "<< (mp.insert(std::make_pair(2, 4))).second << std::endl;
     std::cout << "mp[1] = " << mp[1] << std::endl;
     std::cout << "mp[333] = " << mp[333] << std::endl;
-    std::cout << GREEN << "begin(), end()" << STOP << std::endl;
+    
+    std::cout << GREEN << "empty(), size(), max_size()" << STOP << std::endl;
+    std::cout << "empty(): " << mp.empty() << std::endl;
+    std::cout << "size(): " << mp.size() << std::endl;
+    std::cout << "max_size(): " << mp.max_size() << std::endl;
+    
+    std::cout << GREEN << "begin(), end(), ++, --" << STOP << std::endl;
     mp1.insert(std::make_pair(3, 9));
     mp1.insert(std::make_pair(4, 16));
     mp1.insert(std::make_pair(5, 25));
     std::map<int, int>::iterator first1 = mp1.begin();
     std::map<int, int>::iterator end1 = mp1.end();
-    // end1--;
-    std::cout << "begin() first: " << first1->first << "; second: " << first1->second << std::endl;
-    std::cout << "end() first: " << end1->first << "; second: " << end1->second << std::endl;
+    first1++;
+    end1--;
+    std::cout << "begin()++ first: " << first1->first << "; second: " << first1->second << std::endl;
+    std::cout << "end()-- first: " << end1->first << "; second: " << end1->second << std::endl;
+
+    std::cout << GREEN << "insert(iter1, iter2)" << STOP << std::endl;
+    mp.insert(mp1.begin(), mp1.end());
+    std::map<int, int>::iterator it = mp.begin();
+    std::map<int, int>::iterator en = mp.end();
+    for (; it != en; it++)
+        std::cout << "mp[" << it->first<< "] = " << it->second << std::endl;
 }
 
 int main(){
