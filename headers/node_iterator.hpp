@@ -23,17 +23,18 @@ namespace ft{
         void next(){
             if (current->nil == 0){
                 if (current->right->nil == 0){
+                    current = current->right;
                     while (current->left->nil == 0)
                         current = current->left;
                 }
-            else{
-                node<T> *parent = current->parent;
-                while(parent->nil == 0 && current == parent->right)
-                {
-                    current = parent;
-                    parent = parent->parent;
-                }
-                current = parent; //mistake?
+                else{
+                    node<T> *parent = current->parent;
+                    while(parent->nil == 0 && current == parent->right)
+                    {
+                        current = parent;
+                        parent = parent->parent;
+                    }
+                    current = parent; //mistake?
                 }
             }
         }
@@ -41,12 +42,7 @@ namespace ft{
         void prev(){
             std::cout<< "enterance" << std::endl;
             if (current->nil){
-
-                std::cout<< "first condition" << std::endl;
-                if (current->parent == 0)
-                    std::cout << "null ponter lol, ur looser\n";
-                current = current->parent;
-                
+                current = current->parent;    
                 }
             else if (current->left->nil == 0){
                 current = current->left;
@@ -119,13 +115,7 @@ namespace ft{
         }
 
     };
-        // template <class T> bool operator!=(
-        // const node_iterator<T>& x,
-        // const node_iterator<T>& y){
-        //     return &(*x) != &(*y);
-        // }
 
 }
-//add overload operator!=
-//fix prev()
+
 #endif

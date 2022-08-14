@@ -2,6 +2,7 @@
 #define MAP_HPP
 
 #include <iostream>
+#include <memory>
 #include "iterator.hpp"
 #include "node_iterator.hpp"
 #include "rb_tree.hpp"
@@ -56,24 +57,23 @@ template <class Key, class T, class Compare = std::less<Key>,
 // ? ***************************************************************************
         explicit map(const Compare& comp = Compare(),
         const Allocator& alloc= Allocator()):
-        // :
-         _all(alloc), _cmp(comp)//, _tree(tree<value_type>())
-        {
-            //_tree.printTree();
-            // _tree = tree<value_type>();
-            //_tree = tree<value_type>;
-            // _tree = _all_tree.allocate(sizeof(tree<value_type>));
-            // _all_tree.construct(_tree);
+         _all(alloc), _cmp(comp){}
+
+        template <class InputIterator>
+        map(InputIterator first, InputIterator last,
+        const Compare& comp = Compare(), const Allocator& alloc = Allocator()){
+            _all = alloc;
+            _cmp = comp;
+            for (; first != last; first++)
+                insert(*first);
         }
-        // template <class InputIterator>
-        // map(InputIterator first, InputIterator last,
-        // const Compare& comp = Compare(), const Allocator& = Allocator());
-        // map(const map<Key,T,Compare,Allocator>& x): _all(x._all), _cmp(x._cmp){
-        //     for (; first != last; first++)
-        //         insert(*first);
-            
-            
-        // } //после итератора перегрузить равно для дерева
+
+        map(const map<Key,T,Compare,Allocator>& x): _all(x._all), _cmp(x._cmp){
+            const_iterator first = x.begin();
+            const_iterator last = x.end();
+            for (; first != last; first++)
+                insert(*first);
+        } //после итератора перегрузить равно для дерева
 
         ~map(){}
 
@@ -98,22 +98,22 @@ template <class Key, class T, class Compare = std::less<Key>,
             return const_iterator(_tree.begin());
         }
         iterator end(){
-            return (iterator(_tree.end()))++;
+            return (iterator(_tree.end()));
         }
         const_iterator end() const{
-            return (const_iterator(_tree.end()))++;
+            return (const_iterator(_tree.end()));
         }
         reverse_iterator rbegin(){
-            return reverse_iterator(iterator(_tree.end()));
+            return reverse_iterator(iterator(_tree.last()));
         }
         const_reverse_iterator rbegin() const{
-            return const_reverse_iterator(const_iterator(_tree.end()));
+            return const_reverse_iterator(const_iterator(_tree.last()));
         }
         reverse_iterator rend(){
-            return reverse_iterator((iterator(_tree.end()))++);
+            return reverse_iterator((iterator(_tree.end())));
         }
         const_reverse_iterator rend() const{
-            return const_reverse_iterator((const_iterator(_tree.end()))++);
+            return const_reverse_iterator((const_iterator(_tree.end())));
         }
 // ? ***************************************************************************
 // ? *                       capacity:                                         *
@@ -122,7 +122,7 @@ template <class Key, class T, class Compare = std::less<Key>,
             return (size() == 0);
         }
         size_type size() const{
-            return _tree->size();
+            return _tree.size();
         }
         size_type max_size() const{
                 return _all_node.max_size();
@@ -171,9 +171,16 @@ template <class Key, class T, class Compare = std::less<Key>,
             for (; first != last; first++)
                 _tree.rb_delete(first.base());
         }
-        
-        void swap(map<Key,T,Compare,Allocator>&);
-        void clear();
+
+        void swap(map<Key,T,Compare,Allocator>&x){
+            std::swap(*this, x);
+        }
+
+        void clear(){
+            size_t delete_counter = size();
+            for (size_t i = 0; i != delete_counter; i++)
+                erase(begin());
+        }
 // ? ***************************************************************************
 // ? *                       observers:                                        *
 // ? ***************************************************************************
@@ -197,13 +204,41 @@ template <class Key, class T, class Compare = std::less<Key>,
 
         // pair<const_iterator,const_iterator>
         // equal_range(const key_type& x) const;
+        
+        // void test(){ 
+        //     _tree.printTree();
+        // }
 };
     template <class Key, class T, class Compare, class Allocator>
     bool operator==(const map<Key,T,Compare,Allocator>& x,
     const map<Key,T,Compare,Allocator>& y);
+    // {
+    //     if (x.size() != y.size())
+    //         return false;
+    //     ft::map<Key,T>::iterator it1 = x.begin();
+    //     ft::map<Key,T>::iterator it2 = y.begin();
+    //     ft::map<Key,T>::iterator end = x.end();
+    //     for (; it1 != end; it1++){
+    //         if (it1 != it2)
+    //         return false;
+    //         }
+    //     return true;
+    // }
+
     template <class Key, class T, class Compare, class Allocator>
     bool operator< (const map<Key,T,Compare,Allocator>& x,
     const map<Key,T,Compare,Allocator>& y);
+    // {
+    //     size_t compare_distance = (x.size() < y.size()) ? x.size() : y.size();
+    //     ft::map<Key,T,Compare,Allocator>::iterator it1 = x.begin();
+    //     ft::map<Key,T,Compare,Allocator>::iterator it2 = y.begin();
+    //     ft::map<Key,T,Compare,Allocator>::iterator end = x.end();
+    //     for (size_t i = 0; i != compare_distance; it1++){
+    //         if (it1 it2)
+    //         return false;
+    //         }
+    //     return true;
+    // }
     template <class Key, class T, class Compare, class Allocator>
     bool operator!=(const map<Key,T,Compare,Allocator>& x,
     const map<Key,T,Compare,Allocator>& y);
