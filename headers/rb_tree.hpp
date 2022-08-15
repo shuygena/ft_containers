@@ -122,12 +122,12 @@ namespace ft
                 x->parent = y;          
             }
 
-            void insert(const value_type &kv){
-                // node<value_type> w;
-                // node<value_type> il;
+            void insert(const value_type &kv, node <value_type> *x){
+                if (x == 0)
+                    x = root;
                 node <value_type> *z = new node<value_type>(kv);
                 node <value_type> *y = &const_nil; // = &(node<value_type>());
-                node <value_type> *x = root;
+                // node <value_type> *x = root;
                 while (x->nil == false)
                 {
                     y = x;
