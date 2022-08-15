@@ -80,7 +80,7 @@ template <class Key, class T, class Compare = std::less<Key>,
         map<Key,T,Compare,Allocator>&
         operator=(const map<Key,T,Compare,Allocator>& x){
         if (this != &x){
-        //     _tree.clear();
+            _tree.clear();
             _cmp = x._cmp;
             _all = x._all;
         //     _tree = x._tree;
@@ -133,7 +133,7 @@ template <class Key, class T, class Compare = std::less<Key>,
         T& operator[](const key_type& x){
             node<value_type> *tmp = _tree.search(x);
             if (tmp->nil){
-                _tree.insert(ft::make_pair(x, mapped_type()));
+                _tree.insert(ft::make_pair(x, mapped_type()), 0);
                 tmp = _tree.search(x);
             }
             return tmp->key_value.second;
@@ -146,27 +146,39 @@ template <class Key, class T, class Compare = std::less<Key>,
             node<value_type> *tmp = _tree.search(x.first);
             bool not_finded = 0;
             if (tmp->nil){
-                _tree.insert(x);
+                _tree.insert(x, 0);
                 tmp = _tree.search(x.first);
                 not_finded = 1;
             }
             return pair<iterator, bool>(iterator(tmp), not_finded);
             // return ft::make_pair( )  
         }
-        // iterator insert(iterator position, const value_type& x);
+
+        iterator insert(iterator position, const value_type& x){
+            node<value_type> *tmp = _tree.search(x.first);
+            key_type z = x.first;
+            if (tmp->nil){
+                _tree.insert(position.base(), x);                    
+            }
+            return iterator(_tree.search(z));
+        }
+
         template <class InputIterator>
         void insert(InputIterator first, InputIterator last){
             for (; first != last; first++)
                 insert(ft::make_pair(first->first, first->second));
         }
+
         void erase(iterator position){
             _tree.rb_delete(position.base());
         }
+
         size_type erase(const key_type& x){
             node<value_type> *tmp = _tree.search(x);
             if (tmp->nil == 0)
                 _tree.rb_delete(tmp);
         }
+
         void erase(iterator first, iterator last){
             for (; first != last; first++)
                 _tree.rb_delete(first.base());
@@ -184,14 +196,38 @@ template <class Key, class T, class Compare = std::less<Key>,
 // ? ***************************************************************************
 // ? *                       observers:                                        *
 // ? ***************************************************************************
-        key_compare key_comp() const;
-        value_compare value_comp() const;
+        key_compare key_comp() const{
+            return _cmp;
+        }
+
+        value_compare value_comp() const{
+            return value_compare(key_comp());
+        }
 // ? ***************************************************************************
 // ? *                       map operations:                                   *
 // ? ***************************************************************************
-        // iterator find(const key_type& x);
-        // const_iterator find(const key_type& x) const;
-        size_type count(const key_type& x) const;
+        iterator find(const key_type& x){
+            key_type z = x;
+            node<value_type> *tmp = _tree.search(z);
+            if (tmp->nil)
+                return iterator();
+            return iterator(tmp);
+        }
+
+        const_iterator find(const key_type& x) const
+        {
+            key_type z = x;
+            return const_iterator(_tree.search(z));
+        }
+
+        size_type count(const key_type& x) const{
+            key_type z = x;
+            node<value_type> *tmp = _tree.search(z);
+            if (tmp->nil)
+                return 0;
+            return 1;
+        }
+
         // iterator lower_bound(const key_type& x);
 
         // const_iterator lower_bound(const key_type& x) const;
@@ -230,15 +266,16 @@ template <class Key, class T, class Compare = std::less<Key>,
     const map<Key,T,Compare,Allocator>& y);
     // {
     //     size_t compare_distance = (x.size() < y.size()) ? x.size() : y.size();
-    //     ft::map<Key,T,Compare,Allocator>::iterator it1 = x.begin();
-    //     ft::map<Key,T,Compare,Allocator>::iterator it2 = y.begin();
-    //     ft::map<Key,T,Compare,Allocator>::iterator end = x.end();
+    //     ft::map<Key,T>::iterator it1 = x.begin();
+    //     ft::map<Key,T>::iterator it2 = y.begin();
+    //     ft::map<Key,T>::iterator end = x.end();
     //     for (size_t i = 0; i != compare_distance; it1++){
-    //         if (it1 it2)
+    //         if (it2)
     //         return false;
     //         }
     //     return true;
     // }
+
     template <class Key, class T, class Compare, class Allocator>
     bool operator!=(const map<Key,T,Compare,Allocator>& x,
     const map<Key,T,Compare,Allocator>& y);
