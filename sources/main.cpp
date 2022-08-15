@@ -222,10 +222,10 @@ void test_map(void)
     ft::pair<int, std::string> vk3(4, "four");
     ft::node< ft::pair<int, std::string> > n3(vk3);
     std::cout << "n is " << n.nil << std::endl;
-    t.insert(vk);
-    t.insert(vk1);
-    t.insert(vk2);
-    t.insert(vk3);
+    t.insert(vk, 0);
+    t.insert(vk1, 0);
+    t.insert(vk2, 0);
+    t.insert(vk3, 0);
     // t.test();
     t.printTree();
     // t.rb_delete(&n2);
@@ -306,6 +306,7 @@ void test_map(void)
     std::map<int, int>::iterator en = mp.end();
     for (; it != en; it++)
         std::cout << "mp[" << it->first<< "] = " << it->second << std::endl;
+    // mp.insert(mp.begin(), ft::make_pair(8, 64));
 }
 
 int main(){
