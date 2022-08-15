@@ -40,7 +40,6 @@ namespace ft{
         }
 
         void prev(){
-            std::cout<< "enterance" << std::endl;
             if (current->nil){
                 current = current->parent;    
                 }
@@ -71,7 +70,7 @@ namespace ft{
 
         ~node_iterator(){}
 
-        pointer base() const{
+        node<T> *base() const{
             return current;
         }
 
@@ -83,8 +82,7 @@ namespace ft{
         }
 
         reference operator*() const{
-        //return *(current->kye_value); // correct pair type for key and value?
-        return current->key_value;
+            return current->key_value;
         }
 
         pointer operator->() const{
