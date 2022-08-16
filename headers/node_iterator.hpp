@@ -34,7 +34,7 @@ namespace ft{
                         current = parent;
                         parent = parent->parent;
                     }
-                    current = parent; //mistake?
+                    current = parent;
                 }
             }
         }
@@ -66,13 +66,21 @@ namespace ft{
         template<class U>
             node_iterator(const ft::node_iterator<U>& u):
                 current(u.base()){}
-        
 
         ~node_iterator(){}
 
         node<T> *base() const{
             return current;
         }
+
+        // const node<const T> *c_base(){
+        //     std::cout << typeid(current) << std::endl;
+        //     return node_iterator();
+        // }
+
+        // const node<T> *base() const{
+        //     return current;
+        // }
 
         node_iterator& operator=(const node_iterator& u){
             if (this == &u)
