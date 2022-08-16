@@ -265,6 +265,14 @@ void test_map(void)
     m1.insert(m2.begin(), m2.end());
     for (ft::map<int, int>::iterator it1 = m1.begin(); it1 != m1.end(); it1++)
         std::cout << "m1[" << it1->first<< "] = " << it1->second << std::endl;
+    
+    std::cout << GREEN << "erase()" << STOP << std::endl;
+    m1.erase(4);
+    for (ft::map<int, int>::iterator it1 = m1.begin(); it1 != m1.end(); it1++)
+        std::cout << "erase(): m1[" << it1->first<< "] = " << it1->second << std::endl;
+    std::cout << "size after erase: " << m1.size() << std::endl;
+    // m1 == m1;
+    ft::map<int, int>::const_iterator const_first = m1.begin();
 
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD MAP\n";
@@ -306,7 +314,13 @@ void test_map(void)
     std::map<int, int>::iterator en = mp.end();
     for (; it != en; it++)
         std::cout << "mp[" << it->first<< "] = " << it->second << std::endl;
-    // mp.insert(mp.begin(), ft::make_pair(8, 64));
+    
+    std::cout << GREEN << "erase()" << STOP << std::endl;
+    mp.erase(4);
+    for (std::map<int, int>::iterator it = mp.begin(); it != mp.end(); it++)
+        std::cout << "erase(): mp[" << it->first<< "] = " << it->second << std::endl;
+    std::cout << "size after erase: " << mp.size() << std::endl;
+
 }
 
 int main(){
