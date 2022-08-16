@@ -95,13 +95,13 @@ template <class Key, class T, class Compare = std::less<Key>,
         }
 
         const_iterator begin() const{
-            return const_iterator(_tree.begin());
+            return _tree.begin();
         }
         iterator end(){
             return (iterator(_tree.end()));
         }
         const_iterator end() const{
-            return (const_iterator(_tree.end()));
+            return (_tree.end());
         }
         reverse_iterator rbegin(){
             return reverse_iterator(iterator(_tree.last()));
@@ -176,7 +176,11 @@ template <class Key, class T, class Compare = std::less<Key>,
         size_type erase(const key_type& x){
             node<value_type> *tmp = _tree.search(x);
             if (tmp->nil == 0)
+            {
                 _tree.rb_delete(tmp);
+                return 1;
+            }
+            return 0;
         }
 
         void erase(iterator first, iterator last){
@@ -228,66 +232,121 @@ template <class Key, class T, class Compare = std::less<Key>,
             return 1;
         }
 
-        // iterator lower_bound(const key_type& x);
+        iterator lower_bound(const key_type& x){
+            iterator last = end();
+            for (iterator first = begin(); first != last; ++first){
+                if (first->first >= x)
+                    return first;
+            }
+            return (last);
+        }
 
-        // const_iterator lower_bound(const key_type& x) const;
+        const_iterator lower_bound(const key_type& x) const{
+            iterator last = end();
+            for (iterator first = begin(); first != last; ++first){
+                if (first->first >= x)
+                    return const_iterator(first);
+            }
+            return const_iterator(last);
+        }
 
-        // iterator upper_bound(const key_type& x);
-        // const_iterator upper_bound(const key_type& x) const;
+        iterator upper_bound(const key_type& x){
+            iterator last = end();
+            for (iterator first = begin(); first != last; ++first){
+                if (first->first > x)
+                    return first;
+            }
+            return (last);
+        }
 
-        // pair<iterator,iterator>
-        // equal_range(const key_type& x);
+        const_iterator upper_bound(const key_type& x) const{
+            iterator last = end();
+            for (iterator first = begin(); first != last; ++first){
+                if (first->first > x)
+                    return const_iterator(first);
+            }
+            return const_iterator(last);
+        }
 
-        // pair<const_iterator,const_iterator>
-        // equal_range(const key_type& x) const;
-        
+        pair<iterator,iterator>
+            equal_range(const key_type& x){
+                return (ft::make_pair(lower_bound(x), upper_bound(x)));
+            }
+
+        pair<const_iterator,const_iterator>
+            equal_range(const key_type& x) const{
+                return (ft::make_pair(lower_bound(x), upper_bound(x)));
+            }
+
+    friend bool operator==(const map x, const map& y)
+    {
+        if (x.size() != y.size())
+            return false;
+        const_iterator it1 = x.begin();
+        const_iterator it2 = y.begin();
+        const_iterator end = x.end();
+        for (; it1 != end; it1++){
+            if ((it1->first != it2->first ) || (it1->second != it2->second))
+                return false;
+            it2++;
+            }
+        return true;
+    }
+
+        friend bool operator< (const map& x, const map& y)
+        {
+            size_t compare_distance = (x.size() < y.size()) ? x.size() : y.size();
+            const_iterator it1 = x.begin();
+            const_iterator it2 = y.begin();
+            const_iterator end = x.end();
+            for (size_t i = 0; i != compare_distance; i++){
+                if (it1->first != it2->first )
+                    return (it1->first < it2->first);
+                if (it1->second != it2->second)
+                    return (it1->second < it2->second);
+                it1++;
+                it2++;
+                }
+            if (x.size() < y.size())
+                return true;
+            return false;
+        }
+
+    friend bool operator!=(const map& x, const map& y){
+        return !(x == y);
+    }
+
+    friend bool operator> (const map& x, const map& y){
+                size_t compare_distance = (x.size() < y.size()) ? x.size() : y.size();
+            const_iterator it1 = x.begin();
+            const_iterator it2 = y.begin();
+            const_iterator end = x.end();
+            for (size_t i = 0; i != compare_distance; i++){
+                if (it1->first != it2->first )
+                    return (it1->first > it2->first);
+                if (it1->second != it2->second)
+                    return (it1->second > it2->second);
+                it1++;
+                it2++;
+                }
+            if (x.size() > y.size())
+                return true;
+            return false;
+    }
+
+    friend bool operator>=(const map& x, const map& y){
+        return !(x < y);
+    }
+
+    friend bool operator<=(const map& x, const map& y){
+        return !(x > y);
+    }
+
+    };
         // void test(){ 
         //     _tree.printTree();
         // }
-};
-    template <class Key, class T, class Compare, class Allocator>
-    bool operator==(const map<Key,T,Compare,Allocator>& x,
-    const map<Key,T,Compare,Allocator>& y);
-    // {
-    //     if (x.size() != y.size())
-    //         return false;
-    //     ft::map<Key,T>::iterator it1 = x.begin();
-    //     ft::map<Key,T>::iterator it2 = y.begin();
-    //     ft::map<Key,T>::iterator end = x.end();
-    //     for (; it1 != end; it1++){
-    //         if (it1 != it2)
-    //         return false;
-    //         }
-    //     return true;
-    // }
 
-    template <class Key, class T, class Compare, class Allocator>
-    bool operator< (const map<Key,T,Compare,Allocator>& x,
-    const map<Key,T,Compare,Allocator>& y);
-    // {
-    //     size_t compare_distance = (x.size() < y.size()) ? x.size() : y.size();
-    //     ft::map<Key,T>::iterator it1 = x.begin();
-    //     ft::map<Key,T>::iterator it2 = y.begin();
-    //     ft::map<Key,T>::iterator end = x.end();
-    //     for (size_t i = 0; i != compare_distance; it1++){
-    //         if (it2)
-    //         return false;
-    //         }
-    //     return true;
-    // }
-
-    template <class Key, class T, class Compare, class Allocator>
-    bool operator!=(const map<Key,T,Compare,Allocator>& x,
-    const map<Key,T,Compare,Allocator>& y);
-    template <class Key, class T, class Compare, class Allocator>
-    bool operator> (const map<Key,T,Compare,Allocator>& x,
-    const map<Key,T,Compare,Allocator>& y);
-    template <class Key, class T, class Compare, class Allocator>
-    bool operator>=(const map<Key,T,Compare,Allocator>& x,
-    const map<Key,T,Compare,Allocator>& y);
-    template <class Key, class T, class Compare, class Allocator>
-    bool operator<=(const map<Key,T,Compare,Allocator>& x,
-    const map<Key,T,Compare,Allocator>& y);
 // ? ***************************************************************************
 // ? *                       specialized algorithms:                           *
 // ? ***************************************************************************
