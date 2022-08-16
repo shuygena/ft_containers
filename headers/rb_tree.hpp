@@ -71,6 +71,10 @@ namespace ft
                     }
                     return *this;
                 }
+            
+            ~tree(){}
+
+            
 
             // tree& operator=(tree<value_type> &x){
             //     if (this != &x)
@@ -210,7 +214,6 @@ namespace ft
                 else
                     u->parent->right = v;
                 v->parent = u->parent;
-                delete u;
             }
 
             void rb_delete(node <value_type> *z){
@@ -220,17 +223,21 @@ namespace ft
                 if (z->left->nil == true){
                     x = z->right;
                     transplant(z, z->right);
-                    }
+                }
                 else if (z->right->nil){
                     x = z->left;
                     transplant(z, z->left);
                 }
                 else{
+                    y = z->right;
+                    while (y->left->nil == 0)
+                        y = y->left;
                     y_color = y->color;
                     x = y->right;
                     if (y->parent == z)
                         x->parent = y;
                     else{ 
+                        transplant(y, y->right);
                         y->right = z->right;
                         y->right->parent = y;
                     }
@@ -242,6 +249,7 @@ namespace ft
                 tsize--;
                 if (y_color == BLACK)
                     delete_fixup(x);
+                delete z;    
             }
 
             void delete_fixup(node <value_type> *x){
