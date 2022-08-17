@@ -408,6 +408,22 @@ namespace ft
                 }
                 return x;
         }
+        
+        void clear_node(node<value_type> *clean_node){
+            if (clean_node->nil == 0){
+                clear_node(clean_node->right);
+                clear_node(clean_node->left);
+                delete clean_node;
+            }
+        }
+
+        void clear()
+        {
+            clear_node(root);
+            root = &const_nil;
+            const_nil.parent = NULL;
+            tsize = 0;
+        }
 
         node<value_type> *end(){
             node <value_type> *tmp = root;
