@@ -8,7 +8,6 @@
 #include <deque>
 #include <map>
 
-
 #define STOP   "\033[0m"
 #define GREEN   "\033[32m"     
 
@@ -209,7 +208,8 @@ void test_map(void)
     std::cout << "=======================================\n";
     std::cout << "\t\tFT MAP\n";
     std::cout << "=======================================\n";
-    ft::pair<int, std::string> vk(1, "one");
+    
+    /*ft::pair<int, std::string> vk(1, "one");
     std::cout << vk.first << " = " << vk.second << "\n";
 
 
@@ -229,13 +229,11 @@ void test_map(void)
     // t.test();
     t.printTree();
     // t.rb_delete(&n2);
-    // t.printTree();
+    // t.printTree();*/
 
     std::cout << GREEN << "insert(key_value), map[]" << STOP << std::endl;
     ft::map<int, int> m1;
     ft::map<int, int> m2;
-    // ft::map<int, int>::iterator it1;
-    // it1->first = 4; //это не работает
     std::cout << "insert(1, 1): "<< (m1.insert(ft::make_pair(1, 1))).second << std::endl;
     std::cout << "insert(1, 1): "<< (m1.insert(ft::make_pair(1, 1))).second << std::endl;
     std::cout << "insert(1, 2): "<< (m1.insert(ft::make_pair(1, 2))).second << std::endl;
@@ -271,8 +269,14 @@ void test_map(void)
     for (ft::map<int, int>::iterator it1 = m1.begin(); it1 != m1.end(); it1++)
         std::cout << "erase(): m1[" << it1->first<< "] = " << it1->second << std::endl;
     std::cout << "size after erase: " << m1.size() << std::endl;
-    // m1 == m1;
-    ft::map<int, int>::const_iterator const_first = m1.begin();
+
+    std::cout << GREEN << "overload operators: ==, !=, <, >, <=, >=" << STOP << std::endl;
+    std::cout << "m1 == m1: " << (m1 == m1) << std::endl;
+    std::cout << "m1 != m2: " << (m1 != m2) << std::endl;
+    std::cout << "m1 < m2: " << (m1 < m2) << std::endl;
+    std::cout << "m1 < m2: " << (m1 > m2) << std::endl;
+    std::cout << "m1 < m2: " << (m1 <= m2) << std::endl;
+    std::cout << "m1 < m2: " << (m1 >= m2) << std::endl;
 
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD MAP\n";
@@ -321,10 +325,17 @@ void test_map(void)
         std::cout << "erase(): mp[" << it->first<< "] = " << it->second << std::endl;
     std::cout << "size after erase: " << mp.size() << std::endl;
 
+    std::cout << GREEN << "overload operators: ==, !=, <, >, <=, >=" << STOP << std::endl;
+    std::cout << "mp == mp: " << (mp == mp) << std::endl;
+    std::cout << "mp != mp1: " << (mp != mp1) << std::endl;
+    std::cout << "mp < mp1: " << (mp < mp1) << std::endl;
+    std::cout << "mp < mp1: " << (mp > mp1) << std::endl;
+    std::cout << "mp < mp1: " << (mp <= mp1) << std::endl;
+    std::cout << "mp < mp1: " << (mp >= mp1) << std::endl;
 }
 
 int main(){
-    // test_stack();
-    // test_vector();
+    test_stack();
+    test_vector();
     test_map();
 }
