@@ -22,8 +22,8 @@ template <class Key, class T, class Compare = std::less<Key>,
         typedef Allocator allocator_type;
         typedef typename Allocator::reference reference;
         typedef typename Allocator::const_reference const_reference;
-        typedef ft::node_iterator<value_type> iterator;
-        typedef ft::node_iterator<const value_type> const_iterator;
+        typedef ft::node_iterator<ft::node<value_type>*, value_type> iterator;
+        typedef ft::node_iterator<const ft::node<value_type>*, value_type> const_iterator;
         typedef typename Allocator::size_type size_type;
         typedef typename Allocator::difference_type difference_type;
         typedef typename Allocator::pointer pointer;
@@ -69,8 +69,8 @@ template <class Key, class T, class Compare = std::less<Key>,
         }
 
         map(const map<Key,T,Compare,Allocator>& x): _all(x._all), _cmp(x._cmp){
-            const_iterator first = x.begin();
-            const_iterator last = x.end();
+            iterator first = x.begin();
+            iterator last = x.end();
             for (; first != last; first++)
                 insert(*first);
         } //после итератора перегрузить равно для дерева
@@ -95,7 +95,7 @@ template <class Key, class T, class Compare = std::less<Key>,
         }
 
         const_iterator begin() const{
-            return _tree.begin();
+            return const_iterator(_tree.begin());
         }
         iterator end(){
             return (iterator(_tree.end()));
@@ -194,8 +194,9 @@ template <class Key, class T, class Compare = std::less<Key>,
 
         void clear(){
             size_t delete_counter = size();
-            for (size_t i = 0; i != delete_counter; i++)
-                erase(begin());
+            for (size_t i = 0; i != delete_counter; i++){
+                std::cout << i << std::endl;
+                erase(begin());}
         }
 // ? ***************************************************************************
 // ? *                       observers:                                        *
@@ -278,69 +279,32 @@ template <class Key, class T, class Compare = std::less<Key>,
                 return (ft::make_pair(lower_bound(x), upper_bound(x)));
             }
 
-    friend bool operator==(const map x, const map& y)
-    {
-        if (x.size() != y.size())
-            return false;
-        const_iterator it1 = x.begin();
-        const_iterator it2 = y.begin();
-        const_iterator end = x.end();
-        for (; it1 != end; it1++){
-            if ((it1->first != it2->first ) || (it1->second != it2->second))
-                return false;
-            it2++;
-            }
-        return true;
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    friend bool operator==(const map<_Key, _T, _Compare, _Alloc> &x, const map& y){
+        return (x._tree == y._tree);
     }
 
-        friend bool operator< (const map& x, const map& y)
-        {
-            size_t compare_distance = (x.size() < y.size()) ? x.size() : y.size();
-            const_iterator it1 = x.begin();
-            const_iterator it2 = y.begin();
-            const_iterator end = x.end();
-            for (size_t i = 0; i != compare_distance; i++){
-                if (it1->first != it2->first )
-                    return (it1->first < it2->first);
-                if (it1->second != it2->second)
-                    return (it1->second < it2->second);
-                it1++;
-                it2++;
-                }
-            if (x.size() < y.size())
-                return true;
-            return false;
-        }
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    friend bool operator<(const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y){
+         return (x._tree < y._tree);
+     }
 
-    friend bool operator!=(const map& x, const map& y){
-        return !(x == y);
-    }
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    friend bool operator!=(const map<_Key, _T, _Compare, _Alloc> &x,
+    const map<_Key, _T, _Compare, _Alloc> &y);
 
-    friend bool operator> (const map& x, const map& y){
-                size_t compare_distance = (x.size() < y.size()) ? x.size() : y.size();
-            const_iterator it1 = x.begin();
-            const_iterator it2 = y.begin();
-            const_iterator end = x.end();
-            for (size_t i = 0; i != compare_distance; i++){
-                if (it1->first != it2->first )
-                    return (it1->first > it2->first);
-                if (it1->second != it2->second)
-                    return (it1->second > it2->second);
-                it1++;
-                it2++;
-                }
-            if (x.size() > y.size())
-                return true;
-            return false;
-    }
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    friend bool operator> (const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y);
 
-    friend bool operator>=(const map& x, const map& y){
-        return !(x < y);
-    }
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    friend bool operator>=(const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y);
 
-    friend bool operator<=(const map& x, const map& y){
-        return !(x > y);
-    }
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    friend bool operator<=(const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y);
 
     };
         // void test(){ 
@@ -350,6 +314,38 @@ template <class Key, class T, class Compare = std::less<Key>,
 // ? ***************************************************************************
 // ? *                       specialized algorithms:                           *
 // ? ***************************************************************************
+
+
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    bool operator!=(const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y)
+    {
+        return !(x == y);
+    }
+
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    bool operator> (const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y)
+    {
+        if (x == y)
+            return false;
+        return !(x < y);
+    }
+
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    bool operator>=(const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y)
+    {
+        return !(x < y);
+    }
+
+    template<class _Key, class _T, class _Compare, class _Alloc>
+    bool operator<=(const map<_Key, _T, _Compare, _Alloc> &x,
+     const map<_Key, _T, _Compare, _Alloc> &y)
+    {
+        return !(x > y);
+    }
+
     template <class Key, class T, class Compare, class Allocator>
     void swap(map<Key,T,Compare,Allocator>& x,
             map<Key,T,Compare,Allocator>& y);
