@@ -6,19 +6,19 @@
 #include "utils.hpp"
 
 namespace ft{
-    template<class T> //deleted class U
+    template<class T, typename Pair> //deleted class U
     class node_iterator{
     public:
         typedef typename std::bidirectional_iterator_tag iterator_category;
-        typedef typename ft::iterator_traits<T*>::difference_type
+        typedef typename ft::iterator_traits<Pair*>::difference_type
             difference_type;
-        typedef typename ft::iterator_traits<T*>::reference
+        typedef typename ft::iterator_traits<Pair*>::reference
             reference;
-        typedef typename ft::iterator_traits<T*>::pointer pointer;
-        typedef typename ft::iterator_traits<T*>::value_type value_type;
+        typedef typename ft::iterator_traits<Pair*>::pointer pointer;
+        typedef typename ft::iterator_traits<Pair*>::value_type value_type;
 
     private:
-        node<T> *current;
+        T current;
 
         void next(){
             if (current->nil == 0){
@@ -28,7 +28,7 @@ namespace ft{
                         current = current->left;
                 }
                 else{
-                    node<T> *parent = current->parent;
+                    T parent = current->parent;
                     while(parent->nil == 0 && current == parent->right)
                     {
                         current = parent;
@@ -49,7 +49,7 @@ namespace ft{
                     current = current->right;
             }
             else {
-                node<T> *parent = current->parent;
+                T parent = current->parent;
                 while (parent->nil == 0 && current == parent->left){
                     current = parent;
                     parent = parent->parent;
@@ -61,15 +61,15 @@ namespace ft{
         }
     
     public:
-        node_iterator(node<T> *value = 0): current(value){}
+        node_iterator(T value = 0): current(value){}
 
         template<class U>
-            node_iterator(const ft::node_iterator<U>& u):
+            node_iterator(const ft::node_iterator<U, Pair>& u):
                 current(u.base()){}
 
         ~node_iterator(){}
 
-        node<T> *base() const{
+        T base() const{
             return current;
         }
 
