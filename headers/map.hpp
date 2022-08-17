@@ -75,7 +75,9 @@ template <class Key, class T, class Compare = std::less<Key>,
                 insert(*first);
         } //после итератора перегрузить равно для дерева
 
-        ~map(){}
+        ~map(){
+            _tree.clear();
+        }
 
         map<Key,T,Compare,Allocator>&
         operator=(const map<Key,T,Compare,Allocator>& x){
@@ -193,10 +195,7 @@ template <class Key, class T, class Compare = std::less<Key>,
         }
 
         void clear(){
-            size_t delete_counter = size();
-            for (size_t i = 0; i != delete_counter; i++){
-                std::cout << i << std::endl;
-                erase(begin());}
+            _tree.clear();
         }
 // ? ***************************************************************************
 // ? *                       observers:                                        *
