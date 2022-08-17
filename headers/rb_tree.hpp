@@ -34,9 +34,6 @@ namespace ft
         typedef typename value_type::first_type	    key_type;
         typedef typename value_type::second_type    mapped_type;
 
-        //     typedef typename ft::node_iterator<value_type> iterator;
-        //     typedef typename ft::node_iterator<const value_type> const_iterator;
-
         private:
             node <value_type> const_nil;
             node <value_type> *root;
@@ -53,7 +50,7 @@ namespace ft
                 const_nil.right = &const_nil;
                 }
                 
-            tree(tree<value_type> &x){ // tree<value_type> 
+            tree(tree<value_type> &x){  
                 tsize = 0;
                 root = const_nil;
                 const_nil.color = BLACK;
@@ -74,22 +71,59 @@ namespace ft
             
             ~tree(){}
 
-            
+            node<value_type> *next(node<value_type> *tmp) const{
+            node<value_type> *current = tmp;
+            if (current->nil == 0){
+                if (current->right->nil == 0){
+                    current = current->right;
+                    while (current->left->nil == 0)
+                        current = current->left;
+                    return current;
+                }
+                else{
+                    node<value_type> *parent = current->parent;
+                    while(parent->nil == 0 && current == parent->right)
+                    {
+                        current = parent;
+                        parent = parent->parent;
+                    }
+                    current = parent;
+                    return current;
+                }  
+            }
+                return current;
+            }
 
-            // tree& operator=(tree<value_type> &x){
-            //     if (this != &x)
-            //     {
-            //         //clear it
-            //         iterator first = iterator(x.begin());
-            //         iterator last = (iterator(x.end()))++;
-            //         while (first != last)
-            //         {
-            //             insert(*first);
-            //             first++;
-            //         }
-            //         return *this;
-            //     }
-            // }
+            bool operator==(const tree<value_type> &x) const{
+            if (x.size() != size())
+                return false;
+            size_t distance = size();
+            node <value_type> *it1= begin();
+            node <value_type> *it2 = x.begin();
+            for (size_t i = 0; i != distance; i++){
+                if ((it1->key_value.first != it2->key_value.first ) ||
+                    (it1->key_value.second != it2->key_value.second))
+                    return false;
+                it2 = next(it2);
+                it1 = next(it1);
+            }
+            return true;
+            }
+
+            bool operator<(const tree<value_type> &x) const{
+            size_t distance = (size() < x.size()) ? size() : x.size();
+            node <value_type> *it1= begin();
+            node <value_type> *it2 = x.begin();
+            for (size_t i = 0; i != distance; i++){
+                if (it1->key_value.first != it2->key_value.first)
+                    return (it1->key_value.first < it2->key_value.first);
+                if (it1->key_value.second != it2->key_value.second)
+                    return (it1->key_value.second < it2->key_value.second);
+                it2 = next(it2);
+                it1 = next(it1);
+            }
+            return (size() < x.size());
+            }
             
 
             void left_rotate(node <value_type> *x){
@@ -130,8 +164,7 @@ namespace ft
                 if (x == 0)
                     x = root;
                 node <value_type> *z = new node<value_type>(kv);
-                node <value_type> *y = &const_nil; // = &(node<value_type>());
-                // node <value_type> *x = root;
+                node <value_type> *y = &const_nil;
                 while (x->nil == false)
                 {
                     y = x;
@@ -159,9 +192,7 @@ namespace ft
                 node <value_type> *y;
 
                 while (z->parent->color == RED){
-                    // std::cout << "here" << std::endl;
                     if (z->parent == z->parent->parent->left){
-                        // std::cout << "Here 1" << std::endl;
                         y = z->parent->parent->right;
                         if (y->color == RED){
                             z->parent->color = BLACK;
@@ -173,12 +204,10 @@ namespace ft
                             if (z == z->parent->right){
                                 z = z->parent;
                                 left_rotate(z);
-                                // std::cout << "left_rotate" << std::endl;
                             }
                             z->parent->color = BLACK;
                             z->parent->parent->color = RED;
                             right_rotate(z->parent->parent);
-                            // std::cout << "right_rotate" << std::endl;
                         }   
                     }
                     else{
@@ -204,9 +233,7 @@ namespace ft
                 const_nil.parent = last();   
             }
 
-            void transplant(node <value_type> *u, node <value_type> *v){ //delete 1 element
-                // node <value_type> *z = u;
-                // delete() elem
+            void transplant(node <value_type> *u, node <value_type> *v){ 
                 if (u->parent->nil == true)
                     root = v;
                 else if (u == u->parent->left)
@@ -310,7 +337,7 @@ namespace ft
                 const_nil.parent = last(); 
             }
 
-        void printBT(const std::string& prefix, const node<value_type>* nodeV, bool isLeft) const
+        /*void printBT(const std::string& prefix, const node<value_type>* nodeV, bool isLeft) const
 		{
 				std::cout << prefix;
 
@@ -333,25 +360,19 @@ namespace ft
 
         void printTree(){
 			printBT("" , root, false);
-		}
-
-        void test()
-        {
-            std::cout << root->key_value.first << " = " <<  root->key_value.second << std::endl;
-            std::cout << root->left->nil << std::endl;
-            if (root->left->nil == 0)
-                std::cout << "left node: " << root->left->key_value.first << std::endl;
-            std::cout << root->right->nil << std::endl;
-            if (root->right->nil == 0)
-                std::cout << "right node: " << root->right->key_value.first << std::endl;
-            std::cout << root->nil << std::endl;
-        }
+		}*/
 
         size_t size() const{
             return tsize;
         }
 
         node<value_type> *begin(){
+            node <value_type> *tmp = root;
+            while (tmp->left->nil == 0)
+                tmp = tmp->left;
+            return tmp;
+        }
+        node<value_type> *begin() const{
             node <value_type> *tmp = root;
             while (tmp->left->nil == 0)
                 tmp = tmp->left;
@@ -365,8 +386,15 @@ namespace ft
             return tmp;
         }
 
+        node<value_type> *last() const{
+            node <value_type> *tmp = root;
+            while (tmp->right->nil == 0)
+                tmp = tmp->right;
+            return tmp;
+        }
+
         node<value_type> *search(key_type z){
-                node <value_type> *y = &const_nil; // = &(node<value_type>());
+                node <value_type> *y = &const_nil;
                 node <value_type> *x = root;
                 while (x->nil == false)
                 {
@@ -382,6 +410,13 @@ namespace ft
         }
 
         node<value_type> *end(){
+            node <value_type> *tmp = root;
+            while (tmp->right->nil == 0)
+                tmp = tmp->right;
+            return tmp->right;
+        }
+
+        node<value_type> *end() const{
             node <value_type> *tmp = root;
             while (tmp->right->nil == 0)
                 tmp = tmp->right;
