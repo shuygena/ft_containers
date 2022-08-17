@@ -73,15 +73,6 @@ namespace ft{
             return current;
         }
 
-        // const node<const T> *c_base(){
-        //     std::cout << typeid(current) << std::endl;
-        //     return node_iterator();
-        // }
-
-        // const node<T> *base() const{
-        //     return current;
-        // }
-
         node_iterator& operator=(const node_iterator& u){
             if (this == &u)
                 return *this;
