@@ -7,15 +7,20 @@
 #include <stack>
 #include <deque>
 #include <map>
+#include <ctime>
+#include <unistd.h>
 
 #define STOP   "\033[0m"
-#define GREEN   "\033[32m"     
+#define GREEN  "\033[32m"
+#define BLUE   "\033[36m"     
 
 void test_stack(void)
-{
+{ 
     std::cout << "=======================================\n";
     std::cout << "\t\tFT STACK\n";
     std::cout << "=======================================\n";
+
+    clock_t time_start = clock();
 
     std::cout << GREEN << "push(), top(), pop()" << STOP << std::endl;
     ft::stack<int > s1;
@@ -29,10 +34,15 @@ void test_stack(void)
     std::cout << "top element: pop: " << s1.top() << std::endl;
     std::cout << "size of stack: " << s1.size() << std::endl;
     
+    clock_t time_end = clock();
+    std::cout << BLUE << "execution time: " << (time_end - time_start)
+            << " mcs" << STOP << std::endl;
 
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD STACK\n";
     std::cout << "=======================================\n";
+
+    time_start = clock();
 
     std::cout << GREEN << "push(), top(), pop()" << STOP << std::endl;
     std::stack<int > s2;
@@ -46,6 +56,9 @@ void test_stack(void)
     std::cout << "top element: pop: " << s2.top() << std::endl;
     std::cout << "size of stack: " << s2.size() << std::endl;
 
+    time_end = clock();
+    std::cout << BLUE << "execution time: " << (time_end - time_start)
+            << " mcs" << STOP << std::endl;
 }
 
 void test_vector(void)
@@ -54,8 +67,10 @@ void test_vector(void)
     std::cout << "\t\tFT VECTOR\n";
     std::cout << "=======================================\n";
 
+    clock_t time_start = clock();
+
     std::cout << GREEN << "capacity(), push_back(), size(), clear()" << STOP << std::endl;
-    ft::vector<int> v1; //  capacity(), push_back(), size(), clear() 
+    ft::vector<int> v1; 
     std::cout << "capacity: " << v1.capacity()<< std::endl;
     v1.push_back(2);
     std::cout << "capacity: " << v1.capacity()<< std::endl;
@@ -67,10 +82,9 @@ void test_vector(void)
     std::cout << "capacity after clear: " << v1.capacity()<< std::endl;
     std::cout << "size after clear: " << v1.size()<< std::endl;
     std::cout << "begin() = " << *(v1.begin()) << std::endl;
-    //добавить empty()
 
     std::cout << GREEN << "assign(), resize()" << STOP << std::endl;
-    ft::vector<int> vr; //assign(), resize()
+    ft::vector<int> vr; 
     vr.assign(783, 1);
     std::cout << "capacity(): assign 783: " << vr.capacity()<< std::endl;
     vr.push_back(vr.capacity());
@@ -80,7 +94,7 @@ void test_vector(void)
     std::cout << "size(): resize 88: " << vr.size()<< std::endl;
 
     std::cout << GREEN << "asign(range), begin(), end()"<< STOP << std::endl;
-    std::vector<int> vass; //asign(iterator first, iterator end), begin(), end()
+    std::vector<int> vass; 
     ft::vector<int> tmp11, tmp22;
     v1.assign(3, 3);
     tmp11.assign(40, 1);
@@ -92,7 +106,7 @@ void test_vector(void)
     std::cout << "assign capacity = " << vass.capacity() << std::endl;
 
     std::cout << GREEN << "resize(), reverse()"<< STOP << std::endl;
-    v1.clear(); //resize(), reverse()
+    v1.clear(); 
     std::vector<int> vre;
     v1.assign(50, 1);
     v1.resize(25);
@@ -103,7 +117,7 @@ void test_vector(void)
         std::cout << "v1 resize: " << v1.size() << std::endl;
 
     std::cout << GREEN << "insert(), insert(range)"<< STOP << std::endl;
-    v1.insert(v1.begin(), vre.begin(), vre.end());//insert(iterator first, iterator end)
+    v1.insert(v1.begin(), vre.begin(), vre.end());
     std::cout << "insert: size: " << v1.size() << " capacity: " << v1.capacity() << std::endl; 
     v1.insert(v1.end() - 8, 5, 44);
     std::cout << "insert(value): value: " << v1[24] <<
@@ -126,9 +140,15 @@ void test_vector(void)
     v1.erase(v1.end() - 50);
     std::cout << "value after erase = " << v1[v1.size() - 50]<< "; size = " << v1.size()<< std::endl;
 
+    clock_t time_end = clock();
+    std::cout << BLUE << "execution time: " << (time_end - time_start)
+            << " mcs" << STOP << std::endl;
+
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD VECTOR\n";
     std::cout << "=======================================\n";
+
+    time_start = clock();
 
     std::cout << GREEN << "capacity(), push_back(), size(), clear()" << STOP << std::endl;
     std::vector<int> v2;
@@ -201,6 +221,9 @@ void test_vector(void)
     // std::cout << "\n";
     //std::cout<< "assign(range) compare: " << (vas == vass) << std::endl;
     // std::cout<< "resize/reverse compare: " << (vre == vres) << std::endl;
+    time_end = clock();
+    std::cout << BLUE << "execution time: " << (time_end - time_start)
+            << " mcs" << STOP << std::endl;
 }
 
 void test_map(void)
@@ -208,7 +231,6 @@ void test_map(void)
     std::cout << "=======================================\n";
     std::cout << "\t\tFT MAP\n";
     std::cout << "=======================================\n";
-    
     /*ft::pair<int, std::string> vk(1, "one");
     std::cout << vk.first << " = " << vk.second << "\n";
 
@@ -230,6 +252,8 @@ void test_map(void)
     t.printTree();
     // t.rb_delete(&n2);
     // t.printTree();*/
+
+    clock_t time_start = clock();
 
     std::cout << GREEN << "insert(key_value), map[]" << STOP << std::endl;
     ft::map<int, int> m1;
@@ -278,15 +302,22 @@ void test_map(void)
     std::cout << "m1 < m2: " << (m1 <= m2) << std::endl;
     std::cout << "m1 < m2: " << (m1 >= m2) << std::endl;
 
+    std::cout << GREEN << "clear()" << STOP << std::endl;
+    m1.clear();
+    std::cout << "m1 after clear(): empty(): " << m1.empty() << std::endl;
+
+    clock_t time_end = clock();
+    std::cout << BLUE << "execution time: " << (time_end - time_start)
+            << " mcs" << STOP << std::endl;
+
     std::cout << "=======================================\n";
     std::cout << "\t\tSTD MAP\n";
     std::cout << "=======================================\n";
-
+    
+    time_start = clock();
     std::cout << GREEN << "insert(key_value), map[]" << STOP << std::endl;
     std::map<int, int> mp;
     std::map<int, int> mp1;
-    // std::map<int, int>::iterator it;
-    // it->first = 4; //это не работает
     std::cout << "insert(1, 1): "<< (mp.insert(std::make_pair(1, 1))).second << std::endl;
     std::cout << "insert(1, 1): "<< (mp.insert(std::make_pair(1, 1))).second << std::endl;
     std::cout << "insert(1, 2): "<< (mp.insert(std::make_pair(1, 2))).second << std::endl;
@@ -332,10 +363,21 @@ void test_map(void)
     std::cout << "mp < mp1: " << (mp > mp1) << std::endl;
     std::cout << "mp < mp1: " << (mp <= mp1) << std::endl;
     std::cout << "mp < mp1: " << (mp >= mp1) << std::endl;
+
+    std::cout << GREEN << "clear()" << STOP << std::endl;
+    mp.clear();
+    std::cout << "mp after clear(): empty(): " << mp.empty() << std::endl;
+
+    time_end = clock();
+    std::cout << BLUE << "execution time: " << (time_end - time_start)
+            << " mcs" << STOP << std::endl;
 }
 
 int main(){
     test_stack();
     test_vector();
     test_map();
+
+    //for leaks
+    //usleep(20000000); 
 }
