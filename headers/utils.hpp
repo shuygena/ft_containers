@@ -2,15 +2,8 @@
 #define UTILS_HPP
 
 #include <iostream>
-#include "vector.hpp"
-namespace ft {
-    template <bool B, class T = void>
-    struct enable_if{};
 
-    template<class T>
-    struct enable_if<true, T>{
-        typedef T type;
-    };
+namespace ft {
 
 //is_integral
     template <class T, bool v>
@@ -54,6 +47,14 @@ namespace ft {
         struct is_integral<long long>: public ft::integral_constant<bool, true> {};
     template <>
         struct is_integral<unsigned long long>: public ft::integral_constant<bool, true> {};
+
+        template <bool B, class T = void>
+    struct enable_if{};
+
+    template<class T>
+    struct enable_if<true, T>{
+        typedef T type;
+    };
 
     template<class InputIterator1, class InputIterator2>
         bool
