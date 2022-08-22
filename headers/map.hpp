@@ -46,7 +46,6 @@ template <class Key, class T, class Compare = std::less<Key>,
         
     private:
         Allocator                       _all;
-        allocator_tree                  _all_tree;
         allocator_node                  _all_node;
         Compare                         _cmp;
         tree<value_type>                _tree;           
